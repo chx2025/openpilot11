@@ -36,7 +36,7 @@
 // Ignition:
 // - If any of the ignition sources in any panda is high, ignition is high
 
-#define MAX_IR_POWER 0.5f
+#define MAX_IR_POWER 0.0f
 #define MIN_IR_POWER 0.0f
 #define CUTOFF_IL 400
 #define SATURATE_IL 1000
@@ -449,7 +449,7 @@ void pandad_run(std::vector<Panda *> &pandas) {
     if (rk.frame() % 5 == 0) {
       //new
       uint64_t now_ms = millis_since_boot();
-      if (now_ms - last_param_check_ms >= 1000) {  // ÿ��
+      if (now_ms - last_param_check_ms >= 1000) {  // Ã¿Ãë
         disable_dm = params.getBool("DisableDM");
         last_param_check_ms = now_ms;
         if(disable_dm){
