@@ -44,7 +44,7 @@ void ExperimentalButtonSP::drawButton(QPainter &p) {
 
     combined_painter.end();
 
-    drawIcon(p, QPoint(btn_size / 2, btn_size / 2), combined_img, QColor(0, 0, 0, 166), (isDown() || !engageable) ? 0.6 : 1.0);
+    drawIcon(p, QPoint(btn_size / 2, btn_size / 2), combined_img, QColor(0, 0, 0, 166), (isDown() || !engageable) ? 0.5 : 0.6);
   } else {
     ExperimentalButton::drawButton(p);
   }
