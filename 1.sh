@@ -80,7 +80,8 @@ cat id_rsa.pub
 
 #!/usr/bin/env bash
 
-# 检查 flask 是否安装
+# 安装flask
+echo "install flask..."
 python -m pip install flask
 
 # Cleanup will be called automatically due to trap on EXIT

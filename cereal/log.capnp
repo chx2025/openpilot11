@@ -154,6 +154,8 @@ struct OnroadEvent @0xc4fa6047f024e718 {
 
     torqueNNLoad @118;
     audioPreLaneChange @119;
+    audioAtcCancel @120;
+    audioAtcResume @121;
 
     soundsUnavailableDEPRECATED @47;
   }
@@ -1176,7 +1178,9 @@ struct ModelDataV2 {
     desire @14 :Desire;
     laneChangeProb @15 :Float32;
     desireLog @16 : Text;
-
+    #new
+    eventType @17 :Int32;
+    leftSec @18 :Int32;
 
     # deprecated
     brakeDisengageProbDEPRECATED @2 :Float32;

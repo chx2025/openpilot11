@@ -124,7 +124,7 @@ class SelfdriveD:
     self.rk = Ratekeeper(100, print_delay_threshold=None)
 
     self.atc_type_last = ""
-
+    self.model_event_type = 0
 
     # some comma three with NVMe experience NVMe dropouts mid-drive that
     # cause loggerd to crash on write, so ignore it only on that platform
@@ -239,7 +239,9 @@ class SelfdriveD:
       if self.sm['driverAssistance'].leftLaneDeparture or self.sm['driverAssistance'].rightLaneDeparture:
         self.events.add(EventName.ldw)
 
-    if self.sm.alive['carrotMan']:
+    #根据carrotMan消息中的atc_type来判断语音的播报类型
+    #if self.sm.alive['carrotMan']:
+    if False:
       atc_type = self.sm['carrotMan'].atcType
       if atc_type != self.atc_type_last:
         if "prepare" not in atc_type and "prepare" in self.atc_type_last: # prepare消失时
@@ -269,19 +271,61 @@ class SelfdriveD:
         self.atc_type_last = atc_type
 
     # Handle lane change
+    laneChangeBlocked = False
+    preLaneChangeLeft = False
+    preLaneChangeRight = False
+    laneChange = False
     if self.sm['modelV2'].meta.laneChangeState == LaneChangeState.preLaneChange:
       direction = self.sm['modelV2'].meta.laneChangeDirection
       if (CS.leftBlindspot and direction == LaneChangeDirection.left) or \
          (CS.rightBlindspot and direction == LaneChangeDirection.right):
         self.events.add(EventName.laneChangeBlocked)
+        laneChangeBlocked = True
       else:
         if direction == LaneChangeDirection.left:
           self.events.add(EventName.preLaneChangeLeft)
+          preLaneChangeLeft = True
         else:
           self.events.add(EventName.preLaneChangeRight)
+          preLaneChangeRight = True
     elif self.sm['modelV2'].meta.laneChangeState in (LaneChangeState.laneChangeStarting,
                                                     LaneChangeState.laneChangeFinishing):
       self.events.add(EventName.laneChange)
+      laneChange = True
+
+    #new 添加来自modelV2的events
+    model_event_type = self.sm['modelV2'].meta.eventType
+    if model_event_type > 0 and model_event_type != self.model_event_type:
+      event_type_val = model_event_type & 255
+      event_type_id = int((model_event_type-event_type_val)/256)
+      if event_type_val == 1:  # 准备变道
+        self.events.add(EventName.audioPreLaneChange)
+        print(f"Event: audioPreLaneChange, laneChangeBlocked={laneChangeBlocked},preLaneChangeLeft={preLaneChangeLeft},preLaneChangeRight={preLaneChangeRight},laneChange={laneChange}")
+      elif event_type_val == 2:  # 变道
+        self.events.add(EventName.audioLaneChange)
+        print(f"Event: audioLaneChange, laneChangeBlocked={laneChangeBlocked},preLaneChangeLeft={preLaneChangeLeft},preLaneChangeRight={preLaneChangeRight},laneChange={laneChange}")
+      elif event_type_val == 3:  # 转弯
+        self.events.add(EventName.audioTurn)
+        print(f"Event: audioTurn, laneChangeBlocked={laneChangeBlocked},preLaneChangeLeft={preLaneChangeLeft},preLaneChangeRight={preLaneChangeRight},laneChange={laneChange}")
+      elif event_type_val == 4:  # 领航已退出
+        self.events.add(EventName.audioAtcCancel)
+        print(f"Event: audioAtcCancel, laneChangeBlocked={laneChangeBlocked},preLaneChangeLeft={preLaneChangeLeft},preLaneChangeRight={preLaneChangeRight},laneChange={laneChange}")
+      elif event_type_val == 5:  # 领航已恢复
+        self.events.add(EventName.audioAtcResume)
+        print(f"Event: audioAtcResume, laneChangeBlocked={laneChangeBlocked},preLaneChangeLeft={preLaneChangeLeft},preLaneChangeRight={preLaneChangeRight},laneChange={laneChange}")
+      elif event_type_val == 6:  # 盲区有车
+        self.events.add(EventName.laneChangeBlocked)
+        print(f"Event: laneChangeBlocked, laneChangeBlocked={laneChangeBlocked},preLaneChangeLeft={preLaneChangeLeft},preLaneChangeRight={preLaneChangeRight},laneChange={laneChange}")
+
+      self.model_event_type = model_event_type
+      print(f"val={model_event_type},id={event_type_id},event_type={event_type_val}")
+
+      # 添加调试信息
+      print(f"Current alert types: {self.state_machine.current_alert_types}")
+      #print(f"Clear event types: {clear_event_types}")
+      print(f"System state: {self.state_machine.state}")
+      print(f"System enabled: {self.enabled}")
+      print(f"System active: {self.active}")
 
     for i, pandaState in enumerate(self.sm['pandaStates']):
       # All pandas must match the list of safetyConfigs, and if outside this list, must be silent or noOutput

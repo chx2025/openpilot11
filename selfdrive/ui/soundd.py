@@ -48,6 +48,8 @@ sound_list: dict[int, tuple[str, int | None, float]] = {
   AudibleAlert.bsdWarning: ("audio_car_watchout.wav", None, MAX_VOLUME),
   AudibleAlert.laneChange: ("audio_lane_change.wav", None, MAX_VOLUME),
   AudibleAlert.preLaneChange: ("audio_pre_lane_change.wav", None, MAX_VOLUME),
+  AudibleAlert.atcCancel: ("audio_atc_cancel.wav", None, MAX_VOLUME),
+  AudibleAlert.atcResume: ("audio_atc_resume.wav", None, MAX_VOLUME),
   AudibleAlert.stopStop: ("audio_stopstop.wav", None, MAX_VOLUME),
   AudibleAlert.stopping: ("audio_stopping.wav", None, MAX_VOLUME),
   AudibleAlert.autoHold: ("audio_auto_hold.wav", None, MAX_VOLUME),
@@ -108,6 +110,7 @@ class Soundd:
     self.params = Params()
     self.soundVolumeAdjust = 1.0
     self.carrot_count_down = 0
+    self.desire_count_down = 0
 
     self.lang = self.params.get('LanguageSetting', encoding='utf8')
     self.load_sounds()
@@ -199,6 +202,17 @@ class Soundd:
         elif count_down == 11:
           new_alert = AudibleAlert.promptDistracted
 
+      #new 来自desire_helper的倒计时
+      dh_count_down = sm['modelV2'].meta.leftSec
+      if self.desire_count_down != dh_count_down:
+        self.desire_count_down = dh_count_down
+        if dh_count_down == 0:
+          new_alert = AudibleAlert.longDisengaged
+        elif 0 < dh_count_down <= 10:
+          new_alert = getattr(AudibleAlert, f'audio{dh_count_down}')
+        elif dh_count_down == 11:
+          new_alert = AudibleAlert.promptDistracted
+
     return new_alert
 
   def get_audible_alert(self, sm):
@@ -228,7 +242,7 @@ class Soundd:
     # sounddevice must be imported after forking processes
     import sounddevice as sd
 
-    sm = messaging.SubMaster(['selfdriveState', 'soundPressure', 'carrotMan'])
+    sm = messaging.SubMaster(['selfdriveState', 'soundPressure', 'carrotMan', 'modelV2'])
 
     with self.get_stream(sd) as stream:
       rk = Ratekeeper(20)

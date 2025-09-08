@@ -1030,6 +1030,12 @@ EVENTS: dict[int, dict[str, Alert | AlertCallbackType]] = {
   EventName.audioPreLaneChange: {
      ET.WARNING: EngagementAlert(AudibleAlert.preLaneChange),
   },
+  EventName.audioAtcCancel: {
+    ET.WARNING: EngagementAlert(AudibleAlert.atcCancel),
+  },
+  EventName.audioAtcResume: {
+    ET.WARNING: EngagementAlert(AudibleAlert.atcResume),
+  },
   EventName.audioTurn: {
      ET.WARNING: EngagementAlert(AudibleAlert.audioTurn),
   },

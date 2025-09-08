@@ -224,8 +224,8 @@ static inline void fill_rect(NVGcontext* vg, const Rect1& r, const NVGcolor* col
     if (stroke_width > 0) {
         nvgStrokeWidth(vg, stroke_width);
         if (stroke_color) nvgStrokeColor(vg, *stroke_color);
-		else nvgStrokeColor(vg, nvgRGB(0, 0, 0));   
-        nvgStroke(vg);                         
+		else nvgStrokeColor(vg, nvgRGB(0, 0, 0));
+        nvgStroke(vg);
     }
 }
 
@@ -1162,7 +1162,7 @@ public:
             return -1;
         }
         const auto carrot_man = sm["carrotMan"].getCarrotMan();
-          
+
         active_carrot = carrot_man.getActiveCarrot();
 
         if (active_carrot > 1) {
@@ -1186,7 +1186,7 @@ public:
           szSdiDescr = QString::fromStdString(carrot_man.getSzSdiDescr());
           szPosRoadName = QString::fromStdString(carrot_man.getSzPosRoadName());
           szTBTMainText = QString::fromStdString(carrot_man.getSzTBTMainText());
-          
+
         }
         else {
           //xTurnInfo = -1;
@@ -1347,6 +1347,7 @@ public:
 
         auto lead_left = sm["radarState"].getRadarState().getLeadLeft();
         auto lead_right = sm["radarState"].getRadarState().getLeadRight();
+        /*
         auto meta = sm["modelV2"].getModelV2().getMeta();
         auto laneChangeState = meta.getLaneChangeState();
         auto laneChangeDirection = meta.getLaneChangeDirection();
@@ -1354,6 +1355,7 @@ public:
             (laneChangeDirection == cereal::LaneChangeDirection::RIGHT);
         bool leftLaneChange = (laneChangeState == cereal::LaneChangeState::PRE_LANE_CHANGE) &&
             (laneChangeDirection == cereal::LaneChangeDirection::LEFT);
+        */
 
 #if 0
         left_blindspot = right_blindspot = true;
@@ -1361,14 +1363,22 @@ public:
         if (left_blindspot) {
             ui_draw_bsd(s, lane_barrier_vertices[0], &color, false);
         }
-        else if (lead_left.getStatus() && lead_left.getDRel() < car_state.getVEgo() * 3.0 && leftLaneChange) {
+        //else if (lead_left.getStatus() && lead_left.getDRel() < car_state.getVEgo() * 3.0 && leftLaneChange) {
+        else if (lead_left.getStatus() && ( (((lead_left.getDRel() + lead_left.getVLead()*3.0) < car_state.getVEgo() * 4.5)
+                                                || (lead_left.getDRel() < car_state.getVEgo()*1.5))
+                                            && (abs(lead_left.getVLead()) > 2.8) ) //速度要大于2或小于-2，否则可能是路边静止物
+                ){
             ui_draw_bsd(s, lane_barrier_vertices[0], &color2, false);
         }
 
         if (right_blindspot) {
             ui_draw_bsd(s, lane_barrier_vertices[1], &color, true);
         }
-        else if (lead_right.getStatus() && lead_right.getDRel() < car_state.getVEgo() * 3.0 && rightLaneChange) {
+        //else if (lead_right.getStatus() && lead_right.getDRel() < car_state.getVEgo() * 3.0 && rightLaneChange) {
+        else if (lead_right.getStatus() && ( (((lead_right.getDRel() + lead_right.getVLead()*3.0) < car_state.getVEgo() * 4.5)
+                                                || (lead_right.getDRel() < car_state.getVEgo()*1.5))
+                                            && (abs(lead_right.getVLead()) > 2.8) ) //速度要大于2或小于-2，否则可能是路边静止物
+                ){
             ui_draw_bsd(s, lane_barrier_vertices[1], &color2, true);
         }
     }
@@ -1975,7 +1985,7 @@ public:
               int max_z = lane_lines[2].getZ().size();
               float z_offset = 0.0;
               foreach(const QString & pair, pairs) {
-                QStringList xy = pair.split(",");  // ","로 x와 y 구분                
+                QStringList xy = pair.split(",");  // ","로 x와 y 구분
                 if (xy.size() == 3) {
                   //printf("coords = x: %.1f, y: %.1f, d:%.1f\n", xy[0].toFloat(), xy[1].toFloat(), xy[2].toFloat());
                   float x = xy[0].toFloat();
@@ -2167,7 +2177,7 @@ public:
     void drawHud(UIState* s) {
         int show_device_state = params.getInt("ShowDeviceState");
         blink_timer = (blink_timer + 1) % 16;
-        disp_timer = (disp_timer + 1) % 64; 
+        disp_timer = (disp_timer + 1) % 64;
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
 
         int x = 140;// 120;
@@ -2716,7 +2726,7 @@ void ui_draw(UIState *s, ModelRenderer* model_renderer, int w, int h) {
   int path_x = drawPathEnd.getPathX();
   int path_y = drawPathEnd.getPathY();
   drawDesire.draw(s, path_x, path_y - 135);
-  
+
 
   drawPlot.draw(s);
 
@@ -2840,7 +2850,7 @@ public:
         const auto live_delay = sm["liveDelay"].getLiveDelay();
         const auto live_torque_params = sm["liveTorqueParameters"].getLiveTorqueParameters();
         const auto live_params = sm["liveParameters"].getLiveParameters();
-        str.sprintf("LD[%.0f%%,%.2f],LT[%.0f%%,%s](%.2f/%.2f), SR(%.1f,%.1f)",
+        str.sprintf("LD[%.0f%%,%.2f],LT[%.0f%%,%s](LA[%.2f]/FRIC[%.2f]), SR(%.1f,%.1f)",
             (float)live_delay.getCalPerc(), live_delay.getLateralDelay(),
             (float)live_torque_params.getCalPerc(), live_torque_params.getLiveValid() ? "ON" : "OFF",
             live_torque_params.getLatAccelFactorFiltered(), live_torque_params.getFrictionCoefficientFiltered(),

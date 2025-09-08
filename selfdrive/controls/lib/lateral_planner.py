@@ -245,23 +245,34 @@ class LateralPlanner:
 
     self.x_sol = self.lat_mpc.x_sol
 
-    debugText = (
-      f"{'lanemode' if self.lanelines_active else 'laneless'} | " +
-      f"({self.LP.llll_prob:.1f}) {self.LP.lane_width_left:.1f}m | " +
-      f"({self.LP.lll_prob:.1f}) {self.LP.lane_width:.1f}m ({self.LP.rll_prob:.1f}) | " +
-      f"{self.LP.lane_width_right:.1f}m ({self.LP.rrll_prob:.1f}) | " +
-      f"{f'offset={self.LP.offset_total * 100.0:.1f}cm turn={np.clip(self.curve_speed, -200, 200):.0f}km/h' if self.lanelines_active else ''}"
-    )
+    #debugText = (
+    #  f"{'lanemode' if self.lanelines_active else 'laneless'} | " +
+    #  f"({self.LP.llll_prob:.1f}) {self.LP.lane_width_left:.1f}m | " +
+    #  f"({self.LP.lll_prob:.1f}) {self.LP.lane_width:.1f}m ({self.LP.rll_prob:.1f}) | " +
+    #  f"{self.LP.lane_width_right:.1f}m ({self.LP.rrll_prob:.1f}) | " +
+    #  f"{f'offset={self.LP.offset_total * 100.0:.1f}cm turn={np.clip(self.curve_speed, -200, 200):.0f}km/h' if self.lanelines_active else ''}"
+    #)
 
+    radar_left_info = ""
+    radar_right_info = ""
     radar_state = sm['radarState']
     lead_left = radar_state.leadLeft
     lead_right = radar_state.leadRight
-    radar_info = f" | LL:{lead_left.status} RL:{lead_right.status}"
+    #radar_status_info = f" | LL:{lead_left.status} RL:{lead_right.status}"
     if lead_left.status:
-      radar_info += f" | L:{lead_left.dRel:.1f}m,{lead_left.vLead * 3.6:.0f}km/h"
+      radar_left_info = f"| L:{lead_left.dRel:.1f}m,{lead_left.vLead * 3.6:.0f}km/h"
     if lead_right.status:
-      radar_info += f" | R:{lead_right.dRel:.1f}m,{lead_right.vLead * 3.6:.0f}km/h"
-    debugText += radar_info
+      radar_right_info += f"| R:{lead_right.dRel:.1f}m,{lead_right.vLead * 3.6:.0f}km/h"
+
+    debugText = (
+      f"{'lanemode' if self.lanelines_active else 'laneless'} | " +
+      f"{self.LP.lane_width_left:.1f}m | " +
+      f"{self.LP.lane_width:.1f}m | " +
+      f"{self.LP.lane_width_right:.1f}m | " +
+      f"{f'offset={self.LP.offset_total * 100.0:.1f}cm turn={np.clip(self.curve_speed, -200, 200):.0f}km/h' if self.lanelines_active else ''}" +
+      radar_left_info +
+      radar_right_info
+    )
 
     lateralPlan.latDebugText = debugText
     #lateralPlan.latDebugText = self.latDebugText

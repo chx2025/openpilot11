@@ -179,7 +179,7 @@ def get_RadarState_from_vision(md, lead_msg: capnp._DynamicStructReader, v_ego: 
     "radarTrackId": -1,
   }
 
-def get_lead_side(v_ego, tracks, md, lane_width, model_v_ego, radar_lat_factor = 0.0):
+def get_lead_side(min_dist, v_ego, tracks, md, lane_width, model_v_ego, radar_lat_factor = 0.0):
   lead_msg = md.leadsV3[0]
   leadCenter = {'status': False}
   leadLeft = {'status': False}
@@ -243,8 +243,8 @@ def get_lead_side(v_ego, tracks, md, lane_width, model_v_ego, radar_lat_factor =
   #leadLeft = min((lead for dRel, lead in leads_left.items() if lead['dRel'] > 5.0 and abs(lead['dPath']) < 3.5), key=lambda x: x['dRel'], default=leadLeft)
   #leadRight = min((lead for dRel, lead in leads_right.items() if lead['dRel'] > 5.0 and abs(lead['dPath']) < 3.5), key=lambda x: x['dRel'], default=leadRight)
   #修改为不要求相对距离大于5米，2025.9.3
-  leadLeft = min((lead for dRel, lead in leads_left.items() if abs(lead['dPath']) < 3.5), key=lambda x: x['dRel'], default=leadLeft)
-  leadRight = min((lead for dRel, lead in leads_right.items() if abs(lead['dPath']) < 3.5), key=lambda x: x['dRel'], default=leadRight)
+  leadLeft = min((lead for dRel, lead in leads_left.items() if lead['dRel'] > min_dist and abs(lead['dPath']) < 3.5 and abs(lead['vLead']) > 2.8), key=lambda x: x['dRel'], default=leadLeft)
+  leadRight = min((lead for dRel, lead in leads_right.items() if lead['dRel'] > min_dist and abs(lead['dPath']) < 3.5 and abs(lead['vLead']) > 2.8), key=lambda x: x['dRel'], default=leadRight)
   leadCenter = min((lead for dRel, lead in leads_center.items() if lead['vLead'] > 5 and lead['radar']), key=lambda x: x['dRel'], default=leadCenter)
 
 
@@ -428,6 +428,8 @@ class RadarD:
     self.radar_lat_factor = 0.0
 
     self.radar_detected = False
+    #new
+    self.sideRadarMinDist = self.params.get_float("SideRadarMinDist") * 0.1
 
 
   def update(self, sm: messaging.SubMaster, rr: car.RadarData):
@@ -439,6 +441,7 @@ class RadarD:
     self.radar_lat_factor = self.params.get_float("RadarLatFactor") * 0.01
     self.radar_reaction_factor = self.params.get_float("RadarReactionFactor") * 0.01
     self.detect_cut_in = self.radar_lat_factor > 0
+    self.sideRadarMinDist = self.params.get_float("SideRadarMinDist") * 0.1
 
     leads_v3 = sm['modelV2'].leadsV3
     if sm.recv_frame['carState'] != self.last_v_ego_frame:
@@ -487,7 +490,7 @@ class RadarD:
       self.radar_state.leadOne, self.radar_detected = self.get_lead(sm['carState'], sm['modelV2'], self.tracks, 0, leads_v3[0], model_v_ego, low_speed_override=False)
       self.radar_state.leadTwo, _ = self.get_lead(sm['carState'], sm['modelV2'], self.tracks, 1, leads_v3[1], model_v_ego, low_speed_override=False)
 
-      ll, lc, lr, leadCenter, self.radar_state.leadLeft, self.radar_state.leadRight, leadCutIn = get_lead_side(self.v_ego, self.tracks, sm['modelV2'], 3.2, model_v_ego, self.radar_lat_factor)
+      ll, lc, lr, leadCenter, self.radar_state.leadLeft, self.radar_state.leadRight, leadCutIn = get_lead_side(self.sideRadarMinDist, self.v_ego, self.tracks, sm['modelV2'], 3.2, model_v_ego, self.radar_lat_factor)
 
       if leadCutIn is not None and leadCutIn["status"] and self.detect_cut_in:
         if self.radar_state.leadOne.status:

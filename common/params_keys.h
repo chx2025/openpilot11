@@ -293,6 +293,9 @@ inline static std::unordered_map<std::string, uint32_t> keys = {
 
     //new
     {"SameSpiCamFilter", PERSISTENT},
+    {"BsdDelayTime", PERSISTENT},
+    {"SideBsdDelayTime", PERSISTENT},
+    {"SideRadarMinDist", PERSISTENT},
     {"AutoTurnDistOffset", PERSISTENT},
     {"AutoTurnInNotRoadEdge", PERSISTENT},
     {"ContinuousLaneChange", PERSISTENT},
@@ -310,8 +313,10 @@ inline static std::unordered_map<std::string, uint32_t> keys = {
     {"AutoDoForkNavDistH", PERSISTENT},
     {"AutoForkDecalRateH", PERSISTENT},
     {"AutoForkSpeedMinH", PERSISTENT},
+    {"AutoKeepForkSpeedH", PERSISTENT},
     {"AutoForkDecalRate", PERSISTENT},
     {"AutoForkSpeedMin", PERSISTENT},
+    {"AutoKeepForkSpeed", PERSISTENT},
     {"AutoForkDistOffset", PERSISTENT},
     {"AutoEnTurnNewLaneTime", PERSISTENT},
     {"AutoDoForkCheckDist", PERSISTENT},
