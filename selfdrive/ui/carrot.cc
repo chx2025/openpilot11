@@ -704,11 +704,11 @@ public:
         else if (longActive) {
             if (xState == 3 || xState == 5) {      //XState.e2eStop, XState.e2eStopped
                 if (v_ego < 1.0) {
-                    sprintf(str, "%s", (trafficState >= 1000) ? tr("Signal Error").toStdString().c_str(): tr("Signal Ready").toStdString().c_str());
+                    sprintf(str, "%s", (trafficState >= 1000) ? tr("信号错误").toStdString().c_str(): tr("信号就绪").toStdString().c_str());
                     ui_draw_text(s, x, disp_y, str, disp_size, COLOR_WHITE, BOLD);
                 }
                 else {
-                    ui_draw_text(s, x, disp_y, tr("Signal slowing").toStdString().c_str(), disp_size, COLOR_WHITE, BOLD);
+                    ui_draw_text(s, x, disp_y, tr("信号减速").toStdString().c_str(), disp_size, COLOR_WHITE, BOLD);
                 }
 #if 0
                 else if (getStopDist() > 0.5) {
@@ -720,7 +720,7 @@ public:
 #endif
             }
             else if (xState == 4) {     //XState.e2ePrepare
-				      ui_draw_text(s, x, disp_y, "E2E주행중", disp_size, COLOR_WHITE, BOLD);
+				      ui_draw_text(s, x, disp_y, "E2E驾驶中", disp_size, COLOR_WHITE, BOLD);
 			      }
             else if (xState == 0 || xState == 1 || xState == 2) {     //XState.lead
                 draw_dist = true;
@@ -1069,7 +1069,7 @@ protected:
         active_carrot = 2;
         nGoPosDist = 500000;
         nGoPosTime = 4 * 60 * 60;
-        szSdiDescr = "어린이 보호구역(스쿨존 시작 구간)";
+        szSdiDescr = "儿童保护区（学校区域开始段）";
         xTurnInfo = 1;
         xDistToTurn = 1000;
         szPosRoadName = "구문천 1길 17";
@@ -1114,9 +1114,9 @@ protected:
             case 4: ui_draw_image(s, { bx - icon_size / 2, by - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f); break;
             case 7: ui_draw_image(s, { bx - icon_size / 2, by - icon_size / 2, icon_size, icon_size }, "ic_turn_u", 1.0f); break;
             case 6: ui_draw_text(s, bx, by + 20, "TG", 35, COLOR_WHITE, BOLD); break;
-            case 8: ui_draw_text(s, bx, by + 20, "목적지", 35, COLOR_WHITE, BOLD); break;
+            case 8: ui_draw_text(s, bx, by + 20, "目的地", 35, COLOR_WHITE, BOLD); break;
             default:
-                sprintf(str, "감속:%d", xTurnInfo);
+                sprintf(str, "减速:%d", xTurnInfo);
                 ui_draw_text(s, bx, by + 20, str, 35, COLOR_WHITE, BOLD);
                 break;
             }
@@ -1146,10 +1146,10 @@ protected:
             local->tm_min += remaining_minutes;
             mktime(local);
             bool is_kor = s->language == "main_ko";
-            sprintf(str, "%s: %.1f%s(%02d:%02d)", (is_kor)?"도착":"ETA", (float)nGoPosTime / 60., (is_kor)?"분":"MIN", local->tm_hour, local->tm_min);
+            sprintf(str, "%s: %.1f%s(%02d:%02d)", (is_kor)?"到达":"预计", (float)nGoPosTime / 60., (is_kor)?"分钟":"分钟", local->tm_hour, local->tm_min);
             ui_draw_text(s, tbt_x + 190, tbt_y + 80, str, 50, COLOR_WHITE, BOLD);
-            sprintf(str, "%.1f%s", nGoPosDist / 1000. * ((s->scene.is_metric)?1:KM_TO_MILE), (s->scene.is_metric) ? "km" : "mile");
-            ui_draw_text(s, tbt_x + 190 + 120, tbt_y + 130, str, 50, COLOR_WHITE, BOLD);
+            sprintf(str, "剩余:%.1f%s", nGoPosDist / 1000. * ((s->scene.is_metric)?1:KM_TO_MILE), (s->scene.is_metric) ? "公里" : "英里");
+            ui_draw_text(s, tbt_x + 190, tbt_y + 130, str, 50, COLOR_WHITE, BOLD);
         }
         return 0;
     }
@@ -2383,26 +2383,26 @@ public:
             dy = by - 200;
             mode_color = COLOR_GREEN_ALPHA(190);
             ui_fill_rect(s->vg, { dx - 65, dy - 38, 130, 90 }, (cpuTemp>80 && blink_timer<=8)?COLOR_RED : mode_color, 15, 2);
-            ui_draw_text(s, dx, dy-5, "CPU", 25, COLOR_WHITE, BOLD);
+            ui_draw_text(s, dx, dy-5, "温度", 25, COLOR_WHITE, BOLD);
             sprintf(str, "%.0f\u00B0C", cpuTemp);
             ui_draw_text(s, dx, dy + 40, str, 40, COLOR_WHITE, BOLD);
 
             dx += 150;
             ui_fill_rect(s->vg, { dx - 65, dy - 38, 130, 90 }, (memoryUsage > 85 && blink_timer <= 8) ? COLOR_RED : mode_color, 15, 2);
-            ui_draw_text(s, dx, dy-5, "MEM", 25, COLOR_WHITE, BOLD);
+            ui_draw_text(s, dx, dy-5, "内存", 25, COLOR_WHITE, BOLD);
             sprintf(str, "%d%%", memoryUsage);
             ui_draw_text(s, dx, dy + 40, str, 40, COLOR_WHITE, BOLD);
 
             dx += 150;
             if (disp_timer < 32) {
               ui_fill_rect(s->vg, { dx - 65, dy - 38, 130, 90 }, mode_color, 15, 2);
-              ui_draw_text(s, dx, dy - 5, "DISK", 25, COLOR_WHITE, BOLD);
+              ui_draw_text(s, dx, dy - 5, "存储", 25, COLOR_WHITE, BOLD);
               sprintf(str, "%.0f%%", 100 - freeSpace);
               ui_draw_text(s, dx, dy + 40, str, 40, COLOR_WHITE, BOLD);
             }
             else {
               ui_fill_rect(s->vg, { dx - 65, dy - 38, 130, 90 }, mode_color, 15, 2);
-              ui_draw_text(s, dx, dy - 5, "VOLT", 25, COLOR_WHITE, BOLD);
+              ui_draw_text(s, dx, dy - 5, "电压", 25, COLOR_WHITE, BOLD);
               sprintf(str, "%.1fV", voltage);
               ui_draw_text(s, dx, dy + 40, str, 40, COLOR_WHITE, BOLD);
             }
@@ -2428,7 +2428,7 @@ public:
             }
             if (show_datetime == 1 || show_datetime == 3) {
                 //strftime(str, sizeof(str), "%m-%d-%a", local);
-                const char* weekdays_ko[] = { "일", "월", "화", "수", "목", "금", "토" };
+                const char* weekdays_ko[] = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
                 strftime(str, sizeof(str), "%m-%d", local); // 날짜만 가져옴
                 int weekday_index = local->tm_wday; // tm_wday: 0=일, 1=월, ..., 6=토
                 snprintf(str + strlen(str), sizeof(str) - strlen(str), "(%s)", weekdays_ko[weekday_index]);
