@@ -35,7 +35,6 @@ static bool toyota_alt_brake = false;
 static bool toyota_stock_longitudinal = false;
 static bool toyota_lta = false;
 static int toyota_dbc_eps_torque_factor = 100;   // conversion factor for STEER_TORQUE_EPS in %: see dbc file
-static bool toyota_long_filter = false;
 
 static uint32_t toyota_compute_checksum(const CANPacket_t *to_push) {
   int addr = GET_ADDR(to_push);
@@ -345,13 +344,10 @@ static safety_config toyota_init(uint16_t param) {
   toyota_secoc = GET_FLAG(param, TOYOTA_PARAM_SECOC);
 #endif
 
-  const uint32_t TOYOTA_PARAM_LONG_FILTER = 16U << TOYOTA_PARAM_OFFSET;
-
   toyota_alt_brake = GET_FLAG(param, TOYOTA_PARAM_ALT_BRAKE);
   toyota_stock_longitudinal = GET_FLAG(param, TOYOTA_PARAM_STOCK_LONGITUDINAL);
   toyota_lta = GET_FLAG(param, TOYOTA_PARAM_LTA);
   toyota_dbc_eps_torque_factor = param & TOYOTA_EPS_FACTOR;
-  toyota_long_filter = GET_FLAG(param, TOYOTA_PARAM_LONG_FILTER);
 
   safety_config ret;
   if (toyota_stock_longitudinal) {
@@ -361,11 +357,7 @@ static safety_config toyota_init(uint16_t param) {
       SET_TX_MSGS(TOYOTA_TX_MSGS, ret);
     }
   } else {
-    if (toyota_long_filter) {
-      SET_TX_MSGS(TOYOTA_LONG_TX_MSGS_FILTER, ret);
-    } else {
-      SET_TX_MSGS(TOYOTA_LONG_TX_MSGS, ret);
-    }
+    SET_TX_MSGS(TOYOTA_LONG_TX_MSGS, ret);
   }
 
   if (toyota_lta) {
