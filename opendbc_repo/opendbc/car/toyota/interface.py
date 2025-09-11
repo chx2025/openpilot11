@@ -116,6 +116,36 @@ class CarInterface(CarInterfaceBase):
       # Disabling radar is only supported on TSS2 radar-ACC cars
       if alpha_long and candidate in RADAR_ACC_CAR:
         ret.flags |= ToyotaFlags.DISABLE_RADAR.value
+        
+      # RADAR_ACC_CAR = CHR TSS2 / RAV4 TSS2
+      # NO_DSU_CAR = CAMRY / CHR
+      if 0x2FF in fingerprint[0] or 0x2AA in fingerprint[0]:
+        print("----------------------------------------------")
+        print("dragonpilot: RADAR_FILTER detected!")
+        print("----------------------------------------------")
+        ret.safetyConfigs[0].safetyParam |= ToyotaSafetyFlags.LONG_FILTER.value
+        ret.alphaLongitudinalAvailable = False
+        ret.flags |= ToyotaFlags.RADAR_FILTER.value | ToyotaFlags.DISABLE_RADAR.value
+
+    sdsu_active = False
+    if not (candidate in (RADAR_ACC_CAR | NO_DSU_CAR)) and 0x2FF in fingerprint[0]:
+      print("----------------------------------------------")
+      print("dragonpilot: SDSU detected!")
+      print("----------------------------------------------")
+      ret.safetyConfigs[0].safetyParam |= ToyotaSafetyFlags.LONG_FILTER.value
+
+      ret.enableDsu = False
+      sdsu_active = True
+      stop_and_go = True
+
+      ret.flags |= ToyotaFlags.SDSU.value
+      ret.alphaLongitudinalAvailable = False
+
+    # openpilot longitudinal enabled by default:
+    #  - cars w/ DSU disconnected
+    #  - TSS2 cars with camera sending ACC_CONTROL where we can block it
+    # openpilot longitudinal behind experimental long toggle:
+    #  - TSS2 radar ACC cars (disables radar)
 
     # openpilot longitudinal enabled by default:
     #  - cars w/ DSU disconnected
@@ -128,8 +158,13 @@ class CarInterface(CarInterfaceBase):
     else:
       ret.openpilotLongitudinalControl = ret.enableDsu or \
         candidate in (TSS2_CAR - RADAR_ACC_CAR) or \
-        bool(ret.flags & ToyotaFlags.DISABLE_RADAR.value)
+        bool(ret.flags & ToyotaFlags.DISABLE_RADAR.value) or \
+        sdsu_active
 
+    if dp_params & structs.DPFlags.ToyotaStockLon:
+      ret.openpilotLongitudinalControl = False
+      ret.alphaLongitudinalAvailable = False
+      
     ret.autoResumeSng = ret.openpilotLongitudinalControl and candidate in NO_STOP_TIMER_CAR
 
     if not ret.openpilotLongitudinalControl:
