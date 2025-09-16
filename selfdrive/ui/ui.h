@@ -19,7 +19,7 @@ const int UI_BORDER_SIZE = 30;
 const int UI_HEADER_HEIGHT = 420;
 
 const int UI_FREQ = 20; // Hz
-const int BACKLIGHT_OFFROAD = 50;
+const int BACKLIGHT_OFFROAD = 20;
 
 const Eigen::Matrix3f VIEW_FROM_DEVICE = (Eigen::Matrix3f() <<
   0.0, 1.0, 0.0,
