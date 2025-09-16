@@ -64,7 +64,7 @@ void HudRenderer::drawSetSpeed(QPainter &p, const QRect &surface_rect) {
 
   // Draw set speed box
   p.setPen(QPen(QColor(255, 255, 255, 75), 6));
-  p.setBrush(QColor(0, 0, 0, 166));
+  p.setBrush(QColor(0, 0, 0, 152));
   p.drawRoundedRect(set_speed_rect, 32, 32);
 
   // Colors based on status
@@ -77,14 +77,14 @@ void HudRenderer::drawSetSpeed(QPainter &p, const QRect &surface_rect) {
     } else if (status == STATUS_OVERRIDE) {
       max_color = QColor(0x91, 0x9b, 0x95, 0xff);
     } else {
-      max_color = QColor(0x80, 0xd8, 0xa6, 0xff);
+      max_color = QColor(0x7f, 0xff, 0x00, 0xff);
     }
   }
 
   // Draw "MAX" text
   p.setFont(InterFont(40, QFont::DemiBold));
   p.setPen(max_color);
-  p.drawText(set_speed_rect.adjusted(0, 27, 0, 0), Qt::AlignTop | Qt::AlignHCenter, tr("MAX"));
+  p.drawText(set_speed_rect.adjusted(0, 20, 0, 0), Qt::AlignTop | Qt::AlignHCenter, tr("MAX"));
 
   // Draw set speed
   QString setSpeedStr = is_cruise_set ? QString::number(std::nearbyint(set_speed)) : "–";
