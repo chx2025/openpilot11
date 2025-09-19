@@ -2853,7 +2853,7 @@ void ui_draw(UIState *s, ModelRenderer* model_renderer, int w, int h) {
   if(draw_carrot)
     drawCarrot.drawRadarInfo(s);
 
-  drawCarrot.drawHud(s);
+  //drawCarrot.drawHud(s);
 
   drawCarrot.drawDebug(s);
   drawCarrot.drawDateTime(s);
