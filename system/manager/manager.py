@@ -24,11 +24,11 @@ def get_default_params():
     # kans
     ("LongPitch", "1"),
     ("EVTable", "1"),
-    ("CompletedTrainingVersion", "0"),
+    ("CompletedTrainingVersion", "0.2.0"),
     ("DisengageOnAccelerator", "0"),
     ("GsmMetered", "1"),
     ("HasAcceptedTerms", "0"),
-    ("LanguageSetting", "main_en"),
+    ("LanguageSetting", "main_zh-CHS"),
     ("OpenpilotEnabledToggle", "1"),
     ("LongitudinalPersonality", str(log.LongitudinalPersonality.standard)),
     ("IsMetric", "1"),
@@ -36,7 +36,7 @@ def get_default_params():
 
     ("SearchInput", "0"),
     ("GMapKey", "0"),
-    ("MapboxStyle", "0"),    
+    ("MapboxStyle", "0"),
 
 
     ("LongitudinalPersonalityMax", "3"),
@@ -61,7 +61,7 @@ def get_default_params():
     ("CarrotCruiseAtcDecel", "-1"),
     ("CommaLongAcc", "0"),
     ("AutoGasTokSpeed", "0"),
-    ("AutoGasSyncSpeed", "1"),
+    ("AutoGasSyncSpeed", "0"),
     ("AutoEngage", "0"),
     ("DisableMinSteerSpeed", "0"),
     ("SoftHoldMode", "0"),
@@ -165,7 +165,7 @@ def get_default_params():
     ("SpeedFromPCM", "2"),
     ("SteerActuatorDelay", "0"),
     ("MaxTimeOffroadMin", "60"),
-    ("DisableDM", "0"),
+    ("DisableDM", "1"),
     ("EnableConnect", "0"),
     ("MuteDoor", "0"),
     ("MuteSeatbelt", "0"),
@@ -356,6 +356,10 @@ def main() -> None:
   os.system(f"python ../../opendbc/car/gm/values.py > {Params().get_param_path()}/SupportedCars_gm")
   os.system(f"python ../../opendbc/car/toyota/values.py > {Params().get_param_path()}/SupportedCars_toyota")
   os.system(f"python ../../opendbc/car/mazda/values.py > {Params().get_param_path()}/SupportedCars_mazda")
+  os.system(f"python ../../opendbc/car/tesla/values.py > {Params().get_param_path()}/SupportedCars_tesla")
+  os.system(f"python ../../opendbc/car/honda/values.py > {Params().get_param_path()}/SupportedCars_honda")
+  os.system(f"python ../../opendbc/car/volkswagen/values.py > {Params().get_param_path()}/SupportedCars_volkswagen")
+  os.system(f"python ../../opendbc/car/ford/values.py > {Params().get_param_path()}/SupportedCars_ford")
 
   if os.getenv("PREPAREONLY") is not None:
     return

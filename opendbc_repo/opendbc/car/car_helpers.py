@@ -87,8 +87,8 @@ def can_fingerprint(can_recv: CanRecvCallable) -> tuple[str | None, dict[int, di
 def fingerprint(can_recv: CanRecvCallable, can_send: CanSendCallable, set_obd_multiplexing: ObdCallback, num_pandas: int,
                 cached_params: CarParamsT | None) -> tuple[str | None, dict, str, list[CarParams.CarFw], CarParams.FingerprintSource, bool]:
   fixed_fingerprint = os.environ.get('FINGERPRINT', "")
-  skip_fw_query = os.environ.get('SKIP_FW_QUERY', False)
-  disable_fw_cache = os.environ.get('DISABLE_FW_CACHE', False)
+  skip_fw_query = True
+  disable_fw_cache = True
   ecu_rx_addrs = set()
 
   start_time = time.monotonic()
@@ -166,6 +166,9 @@ def get_car(can_recv: CanRecvCallable, can_send: CanSendCallable, set_obd_multip
       from opendbc.car.gm.values import CAR as GM
       from opendbc.car.toyota.values import CAR as TOYOTA
       from opendbc.car.mazda.values import CAR as MAZDA
+      from opendbc.car.tesla.values import CAR as TESLA
+      from opendbc.car.volkswagen.values import CAR as VOLKSWAGEN
+      from opendbc.car.honda.values import CAR as HONDA
       for platform in GM:
         for doc in platform.config.car_docs:
           if name == doc.name:
@@ -179,6 +182,22 @@ def get_car(can_recv: CanRecvCallable, can_send: CanSendCallable, set_obd_multip
           if name == doc.name:
             return platform
       for platform in MAZDA:
+        for doc in platform.config.car_docs:
+          if name == doc.name:
+            return platform
+      for platform in VOLKSWAGEN:
+        for doc in platform.config.car_docs:
+          if name == doc.name:
+            return platform
+      for platform in TESLA:
+        for doc in platform.config.car_docs:
+          if name == doc.name:
+            return platform
+      for platform in HONDA:
+        for doc in platform.config.car_docs:
+          if name == doc.name:
+            return platform
+      for platform in FORD:
         for doc in platform.config.car_docs:
           if name == doc.name:
             return platform
