@@ -1255,60 +1255,6 @@ public:
         xSpdDist = 12345;
         nRoadLimitSpeed = 110;
 #endif
-
-        // ▼▼▼▼▼▼▼▼▼▼ 在这里插入定速速度框体代码 ▼▼▼▼▼▼▼▼▼▼
-        // 绘制定速速度框体（与HUD相同的样式）
-        int cruise_x = 60;  // 左侧位置
-        int cruise_y = 45;  // 顶部位置
-
-        // 绘制外层框体+边框
-        const QSize default_size = {172, 204};
-        QSize set_speed_size = s->scene.is_metric ? QSize(200, 204) : default_size;
-        QRect set_speed_rect(QPoint(cruise_x + (default_size.width() - set_speed_size.width()) / 2, cruise_y), set_speed_size);
-
-        // 绘制定速速度框体
-        nvgBeginPath(s->vg);
-        nvgRoundedRect(s->vg, set_speed_rect.x(), set_speed_rect.y(), set_speed_rect.width(), set_speed_rect.height(), 32);
-        nvgStrokeColor(s->vg, nvgRGBA(255, 255, 255, 75));
-        nvgStrokeWidth(s->vg, 6);
-        nvgFillColor(s->vg, nvgRGBA(0, 0, 0, 152));
-        nvgFill(s->vg);
-        nvgStroke(s->vg);
-
-        // 根据状态设置颜色
-        NVGcolor max_color = nvgRGBA(0xa6, 0xa6, 0xa6, 0xff);
-        NVGcolor set_speed_color = nvgRGBA(0x72, 0x72, 0x72, 0xff);
-
-        bool is_cruise_set = longActive && v_cruise > 0;
-        if (is_cruise_set) {
-            set_speed_color = nvgRGBA(255, 255, 255, 255);
-
-            auto controls_state = sm["controlsState"].getControlsState();
-            auto status = controls_state.getEnabled();
-
-            if (status == cereal::ControlsState::Status::DISENGAGED) {
-                max_color = nvgRGBA(255, 255, 255, 255);
-            } else if (status == cereal::ControlsState::Status::OVERRIDE) {
-                max_color = nvgRGBA(0x91, 0x9b, 0x95, 0xff);
-            } else {
-                max_color = nvgRGBA(0x7f, 0xff, 0x00, 0xff);
-            }
-        }
-
-        // 绘制"MAX"文字
-        nvgFontFace(s->vg, "KaiGenGothicKR-Bold");
-        nvgFontSize(s->vg, 40);
-        nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_TOP);
-        nvgFillColor(s->vg, max_color);
-        nvgText(s->vg, set_speed_rect.x() + set_speed_rect.width() / 2, set_speed_rect.y() + 20, "MAX", NULL);
-
-        // 绘制定速速度
-        QString setSpeedStr = is_cruise_set ? QString::number(std::nearbyint(s->scene.is_metric ? v_cruise : v_cruise * KM_TO_MILE)) : "–";
-        nvgFontSize(s->vg, 90);
-        nvgFillColor(s->vg, set_speed_color);
-        nvgText(s->vg, set_speed_rect.x() + set_speed_rect.width() / 2, set_speed_rect.y() + 77, setSpeedStr.toUtf8().constData(), NULL);
-        // ▲▲▲▲▲▲▲▲▲▲ 定速速度框体代码结束 ▲▲▲▲▲▲▲▲▲▲
-
         drawTurnInfo(s);
         drawSpeedLimit(s);
         return drawTurnInfoHud(s);
