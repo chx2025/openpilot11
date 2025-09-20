@@ -1127,9 +1127,9 @@ protected:
         //if (xDistToTurn <= 0 || nGoPosDist <= 0) return;
         char str[128] = "";
 
-        int tbt_x = s->fb_w - 800;
+        int tbt_x = 140 - 120;
         int tbt_y = s->fb_h - 250;
-        NVGcolor stroke_color = COLOR_WHITE;
+        NVGcolor stroke_color = COLOR_WHITE_ALPHA(152);
         if (s->scene._current_carrot_display == 3) {
           ui_fill_rect(s->vg, { tbt_x, 5, 790, s->fb_h - 15 }, COLOR_BLACK_ALPHA(120), 30, 2, &stroke_color);
         }
@@ -1159,11 +1159,11 @@ protected:
             case 3: ui_draw_image(s, { bx - icon_size / 2, by - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f); break;
             case 4: ui_draw_image(s, { bx - icon_size / 2, by - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f); break;
             case 7: ui_draw_image(s, { bx - icon_size / 2, by - icon_size / 2, icon_size, icon_size }, "ic_turn_u", 1.0f); break;
-            case 6: ui_draw_text(s, bx, by + 20, "TG", 35, COLOR_WHITE, BOLD); break;
-            case 8: ui_draw_text(s, bx, by + 20, "目的地", 35, COLOR_WHITE, BOLD); break;
+            case 6: ui_draw_text(s, bx, by + 20, "TG", 35, COLOR_WHITE_ALPHA(200), BOLD); break;
+            case 8: ui_draw_text(s, bx, by + 20, "目的地", 35, COLOR_WHITE_ALPHA(200), BOLD); break;
             default:
                 sprintf(str, "减速:%d", xTurnInfo);
-                ui_draw_text(s, bx, by + 20, str, 35, COLOR_WHITE, BOLD);
+                ui_draw_text(s, bx, by + 20, str, 35, COLOR_WHITE_ALPHA(200), BOLD);
                 break;
             }
             if (s->scene.is_metric) {
@@ -1174,7 +1174,7 @@ protected:
               if (xDistToTurn < 1609) sprintf(str, "%d ft", (int)(xDistToTurn * 3.28084));
               else sprintf(str, "%.1f mi", xDistToTurn / 1609.344f);
             }
-            ui_draw_text(s, bx, by + 120, str, 40, COLOR_WHITE, BOLD);
+            ui_draw_text(s, bx, by + 120, str, 40, COLOR_WHITE_ALPHA(200), BOLD);
         }
         nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BOTTOM);
         if (szPosRoadName.length() > 0) {
@@ -1183,8 +1183,8 @@ protected:
             nvgTextBounds(s->vg, tbt_x + 200, tbt_y + 200, szPosRoadName.toStdString().c_str(), NULL, bounds);
             float text_width = bounds[2] - bounds[0];
             float text_height = bounds[3] - bounds[1];
-            ui_fill_rect(s->vg, { (int)bounds[0] - 10, (int)bounds[1] - 2, (int)text_width + 20, (int)text_height + 13 }, COLOR_GREEN, 10);
-            ui_draw_text(s, tbt_x + 200, tbt_y + 200, szPosRoadName.toStdString().c_str(), 40, COLOR_WHITE, BOLD);
+            ui_fill_rect(s->vg, { (int)bounds[0] - 10, (int)bounds[1] - 2, (int)text_width + 20, (int)text_height + 13 }, COLOR_GREEN_ALPHA(180), 10);
+            ui_draw_text(s, tbt_x + 200, tbt_y + 200, szPosRoadName.toStdString().c_str(), 40, COLOR_WHITE_ALPHA(200), BOLD);
         }
 
         if (nGoPosDist > 0 && nGoPosTime > 0) {
@@ -1195,9 +1195,9 @@ protected:
             mktime(local);
             bool is_kor = s->language == "main_ko";
             sprintf(str, "%s: %.1f%s(%02d:%02d)", (is_kor)?"到达":"预计", (float)nGoPosTime / 60., (is_kor)?"分钟":"分钟", local->tm_hour, local->tm_min);
-            ui_draw_text(s, tbt_x + 190, tbt_y + 80, str, 50, COLOR_WHITE, BOLD);
+            ui_draw_text(s, tbt_x + 190, tbt_y + 80, str, 50, COLOR_WHITE_ALPHA(200), BOLD);
             sprintf(str, "剩余:%.1f%s", nGoPosDist / 1000. * ((s->scene.is_metric)?1:KM_TO_MILE), (s->scene.is_metric) ? "公里" : "英里");
-            ui_draw_text(s, tbt_x + 190, tbt_y + 130, str, 50, COLOR_WHITE, BOLD);
+            ui_draw_text(s, tbt_x + 190, tbt_y + 130, str, 50, COLOR_WHITE_ALPHA(200), BOLD);
         }
         return 0;
     }
@@ -2541,7 +2541,7 @@ public:
             nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
             if (show_datetime == 1 || show_datetime == 2) {
                 strftime(str, sizeof(str), "%H:%M", local);
-                ui_draw_text(s, x, y, str, 100, COLOR_WHITE, BOLD, 3.0f, 8.0f);
+                ui_draw_text(s, x, y, str, 100, COLOR_WHITE_ALPHA(200), BOLD, 3.0f, 8.0f);
 
             }
             if (show_datetime == 1 || show_datetime == 3) {
@@ -2551,7 +2551,7 @@ public:
                 int weekday_index = local->tm_wday; // tm_wday: 0=일, 1=월, ..., 6=토
                 snprintf(str + strlen(str), sizeof(str) - strlen(str), "(%s)", weekdays_ko[weekday_index]);
 
-                ui_draw_text(s, x, y + 70, str, 60, COLOR_WHITE, BOLD, 3.0f, 8.0f);
+                ui_draw_text(s, x, y + 70, str, 60, COLOR_WHITE_ALPHA(200), BOLD, 3.0f, 8.0f);
                 nav_y += 70;
             }
             if (false && szPosRoadName.size() > 0) {
