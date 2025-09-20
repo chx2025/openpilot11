@@ -1,7 +1,7 @@
 Carrot2-v9 (2025-09-xx)
 ========================
 * TR16 Model
-* Lead + 1 detect (전전차 감지기능)
+* Lead + 1 detect
 * Improve radar vision matching
 
 Carrot2-v9 (2025-09-xx)
