@@ -2562,7 +2562,7 @@ public:
     }
     void drawCruiseSpeedBox(const UIState* s) {
         char cruise_speed[32];
-        sprintf(cruise_speed, "%d", (int)drawCarrot.v_cruise);
+        sprintf(cruise_speed, "%d", (int)v_cruise);
 
         // 框体参数 - 放置在屏幕左上角区域
         int box_width = 200;
