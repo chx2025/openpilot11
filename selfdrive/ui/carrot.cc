@@ -2574,9 +2574,13 @@ public:
         NVGcolor stroke_color = COLOR_WHITE_ALPHA(200);
         ui_fill_rect(s->vg, { box_x, box_y, box_width, box_height }, COLOR_BLACK_ALPHA(120), 30, 2, &stroke_color);
 
+        // 显示"最高定速"文字
+        nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_TOP);
+        ui_draw_text(s, box_x + box_width / 2, box_y + 20, tr("最高定速").toStdString().c_str(), 40, COLOR_ORANGE_ALPHA(200), BOLD);
+
         // 显示定速速度值
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        ui_draw_text(s, box_x + box_width / 2, box_y + box_height / 2, cruise_speed, 80, COLOR_WHITE, BOLD);
+        ui_draw_text(s, box_x + box_width / 2, box_y + 77, cruise_speed, 90, COLOR_WHITE_ALPHA(200), BOLD);
     }
     void drawConnInfo(const UIState* s) {
         int y = 10;
