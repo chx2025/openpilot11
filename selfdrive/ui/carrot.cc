@@ -2980,11 +2980,11 @@ public:
         ui_fill_rect(vg, { x_st, 0, x_ed - x_st, 30 }, COLOR_ORANGE, 15);
 
 
-        char top[256] = "", top_left[256] = "", top_right[256] = "";
-        char bottom[256] = "", bottom_left[256] = "", bottom_right[256] = "";
+        // char top[256] = "", top_left[256] = "", top_right[256] = "";
+        // char bottom[256] = "", bottom_left[256] = "", bottom_right[256] = "";
 
-        Params params = Params();
-        QString str;
+        // Params params = Params();
+        // QString str;
 
         // top
         // str = QString::fromStdString(car_state.getLogCarrot());
@@ -3035,7 +3035,7 @@ public:
         //     sprintf(bottom_right, "%s", ipAddress.toStdString().c_str());
         // }
 
-        int text_margin = 30;
+        // int text_margin = 30;
         // top
         // nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_TOP);
         // ui_draw_text_vg(vg, w / 2, 0, top, 30, COLOR_WHITE, BOLD);
