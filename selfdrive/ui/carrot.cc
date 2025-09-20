@@ -2296,235 +2296,28 @@ public:
     float freeSpace = 0.0f;
     float voltage = 0.0f;
     void drawHud(UIState* s) {
-        int show_device_state = params.getInt("ShowDeviceState");
-        blink_timer = (blink_timer + 1) % 16;
-        disp_timer = (disp_timer + 1) % 64;
-        nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
+        // 新增：绘制定速速度框体
+        int cruise_x = bx - 120;
+        int cruise_y = by - 320;
 
-        int x = 140;// 120;
-        int y = s->fb_h - 500;// 300;// 410;
+        // 绘制外框
+        const QSize set_speed_size = {172, 204};
+        QRect set_speed_rect(QPoint(cruise_x, cruise_y), set_speed_size);
 
-        int bx = x;
-        int by = y + 270;
-#ifdef __UI_TEST
-        xSpdLimit = 50;
-        xSignType = 1;
-#endif
-        // bool cam_detected = false;
-        // if (xSpdLimit > 0 && xSignType != 22 && xSignType != 4) cam_detected = true;
-        NVGcolor stroke_color = COLOR_WHITE;
-        // 关闭 HUD 背景闪屏：始终使用黑色背景
-        NVGcolor bg_color = COLOR_BLACK_ALPHA(90);
-        if (show_device_state > 0) {
-          ui_fill_rect(s->vg, { bx - 120, by - 270, 475, 495 }, bg_color, 30, 2, &stroke_color);
-        }
-        else {
-          ui_fill_rect(s->vg, { bx - 120, by - 270 + 140, 475, 495 - 140 }, bg_color, 30, 2, &stroke_color);
-        }
+        p.setPen(QPen(QColor(255, 255, 255, 75), 6));
+        p.setBrush(QColor(0, 0, 0, 152));
+        p.drawRoundedRect(set_speed_rect, 32, 32);
 
+        // 绘制"MAX"文字
+        p.setFont(InterFont(40, QFont::DemiBold));
+        p.setPen(QColor(0xa6, 0xa6, 0xa6, 0xff));
+        p.drawText(set_speed_rect.adjusted(0, 20, 0, 0), Qt::AlignTop | Qt::AlignHCenter, tr("MAX"));
 
-        // draw traffic light
-        int icon_red = icon_size;
-        int icon_green = icon_size;
-        bool red_light = trafficState == 1;
-        bool green_light = trafficState == 2;
-
-        if(trafficState_carrot == 1) {
-			red_light = true;
-            icon_red *= 1.5;
-		}
-		else if(trafficState_carrot == 2) {
-			green_light = true;
-            icon_green *= 1.5;
-		}
-        if (red_light) ui_draw_image(s, { x - icon_red / 2, y - icon_red / 2 + 270, icon_red, icon_red }, "ic_traffic_red", 1.0f);
-        else if (green_light) ui_draw_image(s, { x - icon_green / 2, y - icon_green / 2 + 270, icon_green, icon_green }, "ic_traffic_green", 1.0f);
-
-        // draw speed
-        char speed[32];
-        sprintf(speed, "%.0f", (s->scene.is_metric)? v_ego * MS_TO_KPH : v_ego * MS_TO_MPH);
-        ui_draw_text(s, bx, by + 50, speed, 120, COLOR_WHITE, BOLD, 3.0f, 8.0f);
-        ui_draw_image(s, { bx - 100, by - 60, 350, 150 }, "ic_speed_bg", 1.0f);
-
-        // draw cruise speed
-        char cruise_speed[32];
-        int cruise_x = bx + 170;
-        int cruise_y = by + 15;
-        if(longActive) sprintf(cruise_speed, "%d", (int)((s->scene.is_metric)?v_cruise: v_cruise * KM_TO_MILE + 0.5));
-		    else sprintf(cruise_speed, "--");
-        if (strcmp(cruise_speed_last, cruise_speed) != 0) {
-			    strcpy(cruise_speed_last, cruise_speed);
-          if(strcmp(cruise_speed, "--"))
-            ui_draw_text_a(s, cruise_x, cruise_y, cruise_speed, 60, COLOR_GREEN, BOLD);
-		    }
-        ui_draw_text(s, cruise_x, cruise_y, cruise_speed, 60, COLOR_GREEN, BOLD, 1.0, 5.0, COLOR_BLACK, COLOR_BLACK);
-
-        // draw apply speed
-        NVGcolor textColor = COLOR_GREEN;
-        NVGcolor white_color = COLOR_WHITE;
-        char apply_speed_str[32];
-        int apply_x = bx + 250;
-        int apply_y = by - 50;
-
-        if (apply_source.length()) {
-            sprintf(apply_speed_str, "%d", (int)((s->scene.is_metric)?apply_speed:apply_speed * KM_TO_MILE + 0.5));
-            textColor = COLOR_ORANGE;    // apply speed가 작동되면... 색을 바꾸자.
-            ui_draw_text(s, apply_x, apply_y, apply_speed_str, 50, textColor, BOLD, 1.0, 5.0, COLOR_BLACK, COLOR_BLACK);
-            ui_draw_text(s, apply_x, apply_y - 50, apply_source.toStdString().c_str(), 30, textColor, BOLD, 1.0, 5.0, COLOR_BLACK, COLOR_BLACK);
-        }
-		    else if(abs(cruiseTarget - v_cruise) > 0.5) {
-            sprintf(apply_speed_str, "%d", (int)((s->scene.is_metric)?cruiseTarget: cruiseTarget * KM_TO_MILE + 0.5));
-			      ui_draw_text(s, apply_x, apply_y, apply_speed_str, 50, textColor, BOLD, 1.0, 5.0, COLOR_BLACK, COLOR_BLACK);
-            ui_draw_text(s, apply_x, apply_y - 50, "eco", 30, textColor, BOLD, 1.0, 5.0, COLOR_BLACK, COLOR_BLACK);
-		    }
-        const SubMaster& sm = *(s->sm);
-
-        // draw gap info
-        char driving_mode_str[32] = "연비";
-        int driving_mode = myDrivingMode;// params.getInt("MyDrivingMode");
-        NVGcolor mode_color = COLOR_GREEN_ALPHA(210);
-        NVGcolor text_color = COLOR_WHITE;
-        switch (driving_mode) {
-        case 1: strcpy(driving_mode_str, tr("ECO").toStdString().c_str()); mode_color = COLOR_GREEN_ALPHA(210);  break;
-        case 2: strcpy(driving_mode_str, tr("SAFE").toStdString().c_str()); mode_color = COLOR_ORANGE_ALPHA(210);  text_color = COLOR_WHITE;  break;
-        case 3: strcpy(driving_mode_str, tr("NORM").toStdString().c_str()); mode_color = COLOR_GREY_ALPHA(210);  text_color = COLOR_WHITE;  break;
-        case 4: strcpy(driving_mode_str, tr("FAST").toStdString().c_str()); mode_color = COLOR_RED_ALPHA(210);  break;
-        default: strcpy(driving_mode_str, tr("ERRM").toStdString().c_str()); break;
-        }
-        int dx = bx - 50;
-        int dy = by + 175;
-        ui_fill_rect(s->vg, { dx - 55, dy - 38, 110, 48 }, mode_color, 15, 2);
-        ui_draw_text(s, dx, dy - 2, driving_mode_str, 32, text_color, BOLD);
-        if (strcmp(driving_mode_str, driving_mode_str_last)) ui_draw_text_a(s, dx, dy, driving_mode_str, 30, COLOR_WHITE, BOLD);
-        strcpy(driving_mode_str_last, driving_mode_str);
-
-        auto locationd = sm["liveLocationKalman"].getLiveLocationKalman();
-        bool is_gps_valid = sm.valid("liveLocationKalman") && locationd.getGpsOK();
-        if (is_gps_valid) {
-          ui_draw_text(s, dx, dy - 45, "GPS", 30, COLOR_GREEN, BOLD);
-        }
-
-        char gap_str[32];
-        int gap = params.getInt("LongitudinalPersonality") + 1;
-        dx = bx + 220;
-        dy = by + 77;
-        sprintf(gap_str, "%d", gap);
-        ui_draw_text(s, dx, dy, gap_str, 40, COLOR_WHITE, BOLD);
-        if (gap_last != gap) ui_draw_text_a(s, dx, dy, gap_str, 40, COLOR_WHITE, BOLD);
-        gap_last = gap;
-
-        dx = bx + 300 - 30;
-        dy = by + 175 + 10;// -38;
-        //float ddx = 70 / 4.;
-        float ddy = 80 / 4.;
-#ifdef __UI_TEST
-        gap = 3;
-#endif
-        for (int i = 0; i < gap; i++) {
-            //ui_fill_rect(s->vg, { (int)(dx + i * ddx), (int)dy, (int)ddx - 2, 48 }, COLOR_GREEN_ALPHA(180), 4, 3);
-            ui_fill_rect(s->vg, { (int)(dx), (int)(dy - ddy*(i+1) + 2), (int)70, (int)ddy-2}, COLOR_GREEN_ALPHA(210), 4, 3, &white_color);
-        }
-
-        char gear_str[32] = "R";
-        dx = bx + 305;
-        dy = by + 60;
-        //const SubMaster& sm = *(s->sm);
-        auto carState = sm["carState"].getCarState();
-        if (carState.getGearShifter() == cereal::CarState::GearShifter::UNKNOWN) strcpy(gear_str, "U");
-        else if (carState.getGearShifter() == cereal::CarState::GearShifter::PARK) strcpy(gear_str, "P");
-        else if (carState.getGearShifter() == cereal::CarState::GearShifter::DRIVE) {
-            if (carState.getGearStep() > 0)
-				sprintf(gear_str, "%d", carState.getGearStep());
-			else
-				strcpy(gear_str, "D");
-        }
-        else if(carState.getGearShifter() == cereal::CarState::GearShifter::NEUTRAL) strcpy(gear_str, "N");
-        else if (carState.getGearShifter() == cereal::CarState::GearShifter::REVERSE) strcpy(gear_str, "R");
-        else if (carState.getGearShifter() == cereal::CarState::GearShifter::SPORT) strcpy(gear_str, "S");
-        else if(carState.getGearShifter() == cereal::CarState::GearShifter::LOW) strcpy(gear_str, "L");
-        else if (carState.getGearShifter() == cereal::CarState::GearShifter::BRAKE) strcpy(gear_str, "B");
-        else if (carState.getGearShifter() == cereal::CarState::GearShifter::ECO) strcpy(gear_str, "E");
-		else strcpy(gear_str, "M");
-
-        ui_fill_rect(s->vg, { dx - 35, dy - 70, 70, 80 }, COLOR_GREEN_ALPHA(210), 15, 3, &white_color);
-        ui_draw_text(s, dx, dy, gear_str, 70, COLOR_WHITE, BOLD);
-
-        if (strcmp(gear_str, gear_str_last)) {
-            ui_draw_text_a(s, dx, dy, gear_str, 70, COLOR_WHITE, BOLD);
-			strcpy(gear_str_last, gear_str);
-        }
-
-        dx = bx + 200;
-        dy = by + 175;
-#ifdef __UI_TEST
-        active_carrot = 2;
-#endif
-        if (active_carrot >= 2) {
-            ui_fill_rect(s->vg, { dx - 55, dy - 38, 110, 48 }, COLOR_GREEN_ALPHA(210), 15, 2);
-            ui_draw_text(s, dx, dy - 2, "APN", 32, COLOR_WHITE, BOLD);
-        }
-        else if (active_carrot >= 1) {
-            ui_fill_rect(s->vg, { dx - 55, dy - 38, 110, 48 }, COLOR_BLUE_ALPHA(210), 15, 2);
-            ui_draw_text(s, dx, dy - 2, "APM", 32, COLOR_WHITE, BOLD);
-        }
-        if (nav_path_vertex_count > 1) {
-            ui_draw_text(s, dx, dy - 45, "ROUTE", 30, COLOR_WHITE, BOLD);
-		}
-#ifdef __UI_TEST
-        active_carrot = 2;
-        nRoadLimitSpeed = 30;
-        xSpdLimit = 50;
-        xSignType = 1;
-#endif
-
-        //if (active_carrot >= 2 || nGoPosDist > 0) {
-        if (true) {
-            dx = bx + 75;
-            dy = by + 175;
-            int disp_speed = 0;
-            NVGcolor limit_color = COLOR_GREEN_ALPHA(210);
-            if (xSpdLimit > 0 && xSignType != 22) {
-                disp_speed = (int)(xSpdLimit * ((s->scene.is_metric)?1:KM_TO_MILE) + 0.5);
-                limit_color = (blink_timer <= 8) ? COLOR_RED_ALPHA(210) : COLOR_YELLOW_ALPHA(210);
-                ui_draw_text(s, dx, dy-45, "CAM", 30, COLOR_ORANGE, BOLD);
-            }
-            else {
-                disp_speed = nRoadLimitSpeed;
-		        // 60 km/h 以下强制显示 60
-				if (disp_speed < 60) {
-					disp_speed = 60;
-				 }
-		        disp_speed = (int)(disp_speed * ((s->scene.is_metric)?1.0:KM_TO_MILE) + 0.5);
-                limit_color = COLOR_YELLOW_ALPHA(210);
-                ui_draw_text(s, dx, dy - 45, "LIMIT", 30, COLOR_ORANGE, BOLD);
-            }
-
-            ui_fill_rect(s->vg, { dx - 55, dy - 38, 110, 48 }, limit_color, 15, 2);
-            ui_draw_text(s, dx, dy, QString::number(disp_speed).toStdString().c_str(), 40, COLOR_WHITE, BOLD);
-        }
-
-        if (show_device_state) {
-            char str[128];
-            dx = bx - 35;
-            dy = by - 200;
-            mode_color = COLOR_GREEN_ALPHA(190);
-            ui_fill_rect(s->vg, { dx - 65, dy - 38, 130, 90 }, (cpuTemp>80 && blink_timer<=8)?COLOR_ORANGE : mode_color, 15, 2);
-            ui_draw_text(s, dx, dy-5, "温度", 25, COLOR_WHITE, BOLD);
-            sprintf(str, "%.0f\u00B0C", cpuTemp);
-            ui_draw_text(s, dx, dy + 40, str, 40, COLOR_WHITE, BOLD);
-
-            dx += 150;
-            ui_fill_rect(s->vg, { dx - 65, dy - 38, 130, 90 }, (memoryUsage > 85 && blink_timer <= 8) ? COLOR_ORANGE : mode_color, 15, 2);
-            ui_draw_text(s, dx, dy-5, "内存", 25, COLOR_WHITE, BOLD);
-            sprintf(str, "%d%%", memoryUsage);
-            ui_draw_text(s, dx, dy + 40, str, 40, COLOR_WHITE, BOLD);
-
-            dx += 150;
-            ui_fill_rect(s->vg, { dx - 65, dy - 38, 130, 90 }, mode_color, 15, 2);
-            ui_draw_text(s, dx, dy - 5, "存储", 25, COLOR_WHITE, BOLD);
-            sprintf(str, "%.0f%%", 100 - freeSpace);
-            ui_draw_text(s, dx, dy + 40, str, 40, COLOR_WHITE, BOLD);
-        }
+        // 绘制定速速度值
+        QString cruiseSpeedStr = QString::number(std::nearbyint(v_cruise));
+        p.setFont(InterFont(90, QFont::Bold));
+        p.setPen(QColor(255, 255, 255));
+        p.drawText(set_speed_rect.adjusted(0, 77, 0, 0), Qt::AlignTop | Qt::AlignHCenter, cruiseSpeedStr);
     }
     void drawDateTime(const UIState* s) {
         char str[128];
@@ -2853,7 +2646,7 @@ void ui_draw(UIState *s, ModelRenderer* model_renderer, int w, int h) {
   if(draw_carrot)
     drawCarrot.drawRadarInfo(s);
 
-  //drawCarrot.drawHud(s);
+  drawCarrot.drawHud(s);
 
   drawCarrot.drawDebug(s);
   drawCarrot.drawDateTime(s);
