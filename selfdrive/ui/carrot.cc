@@ -2556,9 +2556,27 @@ public:
             }
             if (false && szPosRoadName.size() > 0) {
                 nvgTextAlign(s->vg, NVG_ALIGN_RIGHT | NVG_ALIGN_BOTTOM);
-                ui_draw_text(s, x, nav_y, szPosRoadName.toStdString().c_str(), 35, COLOR_WHITE, BOLD, 3.0f, 8.0f);
+                ui_draw_text(s, x, nav_y, szPosRoadName.toStdString().c_str(), 35, COLOR_WHITE_ALPHA(200), BOLD, 3.0f, 8.0f);
             }
         }
+    }
+    void drawCruiseSpeedBox(const UIState* s) {
+        char cruise_speed[32];
+        sprintf(cruise_speed, "%d", (int)drawCarrot.v_cruise);
+
+        // 框体参数 - 放置在屏幕左上角区域
+        int box_width = 200;
+        int box_height = 204;
+        int box_x = 140 - 120; // 与导航信息框体相同的左侧位置
+        int box_y = s->fb_h - 250 - box_height - 20; // 导航信息框体上方
+
+        // 绘制框体
+        NVGcolor stroke_color = COLOR_WHITE_ALPHA(200);
+        ui_fill_rect(s->vg, { box_x, box_y, box_width, box_height }, COLOR_BLACK_ALPHA(120), 30, 2, &stroke_color);
+
+        // 显示定速速度值
+        nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+        ui_draw_text(s, box_x + box_width / 2, box_y + box_height / 2, cruise_speed, 80, COLOR_WHITE, BOLD);
     }
     void drawConnInfo(const UIState* s) {
         int y = 10;
@@ -2854,6 +2872,8 @@ void ui_draw(UIState *s, ModelRenderer* model_renderer, int w, int h) {
     drawCarrot.drawRadarInfo(s);
 
   //drawCarrot.drawHud(s);
+
+  drawCarrot.drawCruiseSpeedBox(s);
 
   drawCarrot.drawDebug(s);
   drawCarrot.drawDateTime(s);
