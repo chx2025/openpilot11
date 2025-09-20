@@ -731,7 +731,7 @@ public:
         char str[128];
         int disp_y = y + 195;// 175;
         bool draw_dist = false;
-        float disp_size = 50;
+        float disp_size = 90;
         if (softHoldActive || brakeHoldActive || carrotCruise) {
             sprintf(str, "%s", (brakeHoldActive) ? "HOLD" : (softHoldActive) ? "SOFTHOLD": "CARROT");
             ui_draw_text(s, x, disp_y, str, disp_size, COLOR_ORANGE_ALPHA(210), BOLD);
@@ -1127,7 +1127,7 @@ protected:
         //if (xDistToTurn <= 0 || nGoPosDist <= 0) return;
         char str[128] = "";
 
-        int tbt_x = 140 - 120;
+        int tbt_x = s->fb_w - 800;
         int tbt_y = s->fb_h - 250;
         NVGcolor stroke_color = COLOR_WHITE_ALPHA(152);
         if (s->scene._current_carrot_display == 3) {
@@ -1151,7 +1151,7 @@ protected:
             int by = tbt_y + 85;
             if (atc_type.length() > 0) {
               stroke_color = COLOR_BLACK;
-              ui_fill_rect(s->vg, { bx - 80, by - 90, 160, 230 }, atc_type.contains("prepare")?COLOR_GREEN_ALPHA(100) : COLOR_GREEN, 15, 1.0f, &stroke_color);
+              ui_fill_rect(s->vg, { bx - 80, by - 90, 160, 230 }, atc_type.contains("prepare")?COLOR_GREEN_ALPHA(100) : COLOR_GREEN_ALPHA(200), 15, 1.0f, &stroke_color);
             }
             switch (xTurnInfo) {
             case 1: ui_draw_image(s, { bx - icon_size / 2, by - icon_size / 2, icon_size, icon_size }, "ic_turn_l", 1.0f); break;
@@ -1288,11 +1288,11 @@ public:
         else if (desireStateLaneChangeRight > 0.5) ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
         if (desireEvent == 57) {
             ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_steer", 1.0f);
-            ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
+            ui_draw_image(s, { x - icon_size / 2 - 70, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
         }
         else if (desireEvent == 58) {
             ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_steer", 1.0f);
-            ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
+            ui_draw_image(s, { x - icon_size / 2 + 70, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
         }
         else if (desireEvent == 71) {
             if (laneChangeDirection == cereal::LaneChangeDirection::LEFT) {
@@ -2567,8 +2567,8 @@ public:
         // 框体参数 - 放置在屏幕左上角区域
         int box_width = 200;
         int box_height = 204;
-        int box_x = 140 - 120; // 与导航信息框体相同的左侧位置
-        int box_y = s->fb_h - 250 - box_height - 20; // 导航信息框体上方
+        int box_x = 140 - 120;
+        int box_y = s->fb_h + 50 - box_height;
 
         // 绘制框体
         NVGcolor stroke_color = COLOR_WHITE_ALPHA(200);
@@ -2580,7 +2580,7 @@ public:
 
         // 显示定速速度值
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        ui_draw_text(s, box_x + box_width / 2, box_y + 77, cruise_speed, 90, COLOR_WHITE_ALPHA(200), BOLD);
+        ui_draw_text(s, box_x + box_width / 2, box_y + 110, cruise_speed, 90, COLOR_WHITE_ALPHA(200), BOLD);
     }
     void drawConnInfo(const UIState* s) {
         int y = 10;
