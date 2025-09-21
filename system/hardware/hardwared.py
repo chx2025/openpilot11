@@ -219,6 +219,8 @@ def hardware_thread(end_event, hw_queue) -> None:
 
   fan_controller = None
 
+  device_go_off_road = False
+
   restart_triggered_ts = 0.
 
   while not end_event.is_set():
@@ -353,7 +355,9 @@ def hardware_thread(end_event, hw_queue) -> None:
             pass
 
     # Handle offroad/onroad transition
-    should_start = all(onroad_conditions.values())
+    if count % 6 == 0:
+      device_go_off_road = params.get_bool("device_go_off_road")
+    should_start = not device_go_off_road and all(onroad_conditions.values())
     if started_ts is None:
       should_start = should_start and all(startup_conditions.values())
 

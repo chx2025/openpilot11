@@ -94,6 +94,7 @@ private:
   QLabel *onroadLbl;
   LabelControl *versionLbl;
   ButtonControl *installBtn;
+  ButtonControl *onOffRoadBtn;
   ButtonControl *downloadBtn;
   ButtonControl *targetBranchBtn;
 
