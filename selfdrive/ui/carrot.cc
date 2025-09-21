@@ -2528,20 +2528,20 @@ public:
     }
     void drawDateTime(const UIState* s) {
         char str[128];
-        // 시간표시
+        // 时间显示
         int show_datetime = params.getInt("ShowDateTime");
         if (show_datetime) {
             time_t now = time(nullptr);
             struct tm* local = localtime(&now);
 
             int x = 170;// s->fb_w - 300;
-            int y = 120;// 150;
+            int y = tbt_y - 40;// 150;
             int nav_y = y + 50;
 
             nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
             if (show_datetime == 1 || show_datetime == 2) {
                 strftime(str, sizeof(str), "%H:%M", local);
-                ui_draw_text(s, x, y, str, 100, COLOR_WHITE_ALPHA(200), BOLD, 3.0f, 8.0f);
+                ui_draw_text(s, x, y, str, 100, COLOR_WHITE_ALPHA(200), BOLD, 0.0f, 0.0f);
 
             }
             if (show_datetime == 1 || show_datetime == 3) {
@@ -2551,13 +2551,13 @@ public:
                 int weekday_index = local->tm_wday; // tm_wday: 0=일, 1=월, ..., 6=토
                 snprintf(str + strlen(str), sizeof(str) - strlen(str), "(%s)", weekdays_ko[weekday_index]);
 
-                ui_draw_text(s, x, y + 70, str, 60, COLOR_WHITE_ALPHA(200), BOLD, 3.0f, 8.0f);
+                ui_draw_text(s, x, y + 70, str, 60, COLOR_WHITE_ALPHA(200), BOLD, 0.0f, 0.0f);
                 nav_y += 70;
             }
-            if (false && szPosRoadName.size() > 0) {
-                nvgTextAlign(s->vg, NVG_ALIGN_RIGHT | NVG_ALIGN_BOTTOM);
-                ui_draw_text(s, x, nav_y, szPosRoadName.toStdString().c_str(), 35, COLOR_WHITE_ALPHA(200), BOLD, 3.0f, 8.0f);
-            }
+            // if (false && szPosRoadName.size() > 0) {
+            //     nvgTextAlign(s->vg, NVG_ALIGN_RIGHT | NVG_ALIGN_BOTTOM);
+            //     ui_draw_text(s, x, nav_y, szPosRoadName.toStdString().c_str(), 35, COLOR_WHITE_ALPHA(200), BOLD, 0.0f, 0.0f);
+            // }
         }
     }
     void drawCruiseSpeedBox(const UIState* s) {
@@ -2568,7 +2568,7 @@ public:
         int box_width = 200;
         int box_height = 204;
         int box_x = 140 - 120;
-        int box_y = s->fb_h + 50 - box_height;
+        int box_y = 100;
 
         // 绘制框体
         NVGcolor stroke_color = COLOR_WHITE_ALPHA(200);
