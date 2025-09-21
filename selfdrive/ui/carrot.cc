@@ -2535,7 +2535,7 @@ public:
             struct tm* local = localtime(&now);
 
             int x = 170;// s->fb_w - 300;
-            int y = 800;// 150;
+            int y = 900;// 150;
             // int nav_y = y + 50;
 
             nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
@@ -2568,7 +2568,7 @@ public:
         int box_width = 200;
         int box_height = 204;
         int box_x = 140 - 120;
-        int box_y = 100;
+        int box_y = 80;
 
         // 绘制框体
         NVGcolor stroke_color = COLOR_WHITE_ALPHA(200);
@@ -2576,7 +2576,7 @@ public:
 
         // 显示"最高定速"文字
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_TOP);
-        ui_draw_text(s, box_x + box_width / 2, box_y + 20, tr("最高定速").toStdString().c_str(), 40, COLOR_GREEN_ALPHA(200), BOLD);
+        ui_draw_text(s, box_x + box_width / 2, box_y + 20, tr("最高定速").toStdString().c_str(), 40, COLOR_ORANGE_ALPHA(200), BOLD);
 
         // 显示定速速度值
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
