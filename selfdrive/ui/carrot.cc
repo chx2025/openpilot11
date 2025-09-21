@@ -2155,10 +2155,10 @@ public:
                   QPolygonF vertext;
                   vertext.push_back(side);
                   vertext.push_back(a_side);
-                  ui_draw_line(s, vertext, nullptr, nullptr, 3.0, (v_sum > 0.f)? COLOR_GREEN_ALPHA(200): COLOR_RED_ALPHA(200);
+                  ui_draw_line(s, vertext, nullptr, nullptr, 3.0, (v_sum > 0.f)? COLOR_GREEN_ALPHA(200): COLOR_RED_ALPHA(200));
                   nvgBeginPath(s->vg);
                   nvgCircle(s->vg, ax, ay, 10);
-                  nvgFillColor(s->vg, (v_sum > 0.f) ? COLOR_GREEN_ALPHA(200) : COLOR_RED_ALPHA(200);
+                  nvgFillColor(s->vg, (v_sum > 0.f) ? COLOR_GREEN_ALPHA(200) : COLOR_RED_ALPHA(200));
                   nvgFill(s->vg);
                 }
 
@@ -2552,7 +2552,7 @@ public:
                 snprintf(str + strlen(str), sizeof(str) - strlen(str), "(%s)", weekdays_ko[weekday_index]);
 
                 ui_draw_text(s, x, y + 70, str, 60, COLOR_WHITE_ALPHA(200), BOLD, 0.0f, 0.0f);
-                nav_y += 70;
+            //     nav_y += 70;
             }
             // if (false && szPosRoadName.size() > 0) {
             //     nvgTextAlign(s->vg, NVG_ALIGN_RIGHT | NVG_ALIGN_BOTTOM);
