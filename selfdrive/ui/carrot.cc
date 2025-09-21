@@ -56,7 +56,7 @@ ModelRenderer* _model = NULL;
 extern  int get_path_length_idx(const cereal::XYZTData::Reader& line, const float path_height);
 int g_fps= 0;
 
-static void ui_draw_text(const UIState* s, float x, float y, const char* string, float size, NVGcolor color, const char* font_name, float borderWidth=3.0, float shadowOffset=0.0, NVGcolor borderColor=COLOR_BLACK, NVGcolor shadowColor=COLOR_BLACK) {
+static void ui_draw_text(const UIState* s, float x, float y, const char* string, float size, NVGcolor color, const char* font_name, float borderWidth=3.0, float shadowOffset=0.0, NVGcolor borderColor=COLOR_BLACK_ALPHA(180), NVGcolor shadowColor=COLOR_BLACK_ALPHA(180)) {
     y += 6;
     nvgFontFace(s->vg, font_name);
     nvgFontSize(s->vg, size);
@@ -78,7 +78,7 @@ static void ui_draw_text(const UIState* s, float x, float y, const char* string,
     nvgFillColor(s->vg, color);
     nvgText(s->vg, x, y, string, NULL);
 }
-static void ui_draw_text_vg(NVGcontext* vg, float x, float y, const char* string, float size, NVGcolor color, const char* font_name, float borderWidth = 3.0, float shadowOffset = 0.0, NVGcolor borderColor = COLOR_BLACK, NVGcolor shadowColor = COLOR_BLACK) {
+static void ui_draw_text_vg(NVGcontext* vg, float x, float y, const char* string, float size, NVGcolor color, const char* font_name, float borderWidth = 3.0, float shadowOffset = 0.0, NVGcolor borderColor = COLOR_BLACK_ALPHA(180), NVGcolor shadowColor = COLOR_BLACK_ALPHA(180)) {
     //y += 6;
     nvgFontFace(vg, font_name);
     nvgFontSize(vg, size);
@@ -256,7 +256,7 @@ static void ui_draw_text_a2(const UIState* s) {
     int x = (s->fb_w / 2 * a_time1 + a_x * (a_max - a_time1)) / a_max;
     int y = ((s->fb_h - 400) * a_time1 + a_y * (a_max - a_time1)) / a_max;
     int size = (350 * a_time1 + a_size * (a_max - a_time1)) / a_max;
-    if (a_time >= 100) ui_draw_text(s, x, y, a_string, size, a_color, a_font, 9.0, 8.0, COLOR_BLACK, COLOR_BLACK);
+    if (a_time >= 100) ui_draw_text(s, x, y, a_string, size, a_color, a_font, 9.0, 8.0, COLOR_BLACK_ALPHA(180), COLOR_BLACK_ALPHA(180));
     else ui_draw_text(s, x, y, a_string, size, a_color, a_font);
 }
 static void ui_draw_text_a(const UIState* s, float x, float y, const char* string, float size, NVGcolor color, const char* font_name) {
@@ -774,14 +774,14 @@ public:
             if (dist > 0.0) {
                 sprintf(str, "%.1f", dist);
                 wStr = 32 * (strlen(str) + 0);
-                ui_fill_rect(s->vg, { (int)(x - w - wStr / 2), (int)(disp_y - 35), wStr, 42 }, isLeadSCC() ? COLOR_RED : COLOR_ORANGE, 15);
+                ui_fill_rect(s->vg, { (int)(x - w - wStr / 2), (int)(disp_y - 35), wStr, 42 }, isLeadSCC() ? COLOR_RED_ALPHA(180) : COLOR_ORANGE_ALPHA(180), 15);
                 ui_draw_text(s, x - w, disp_y, str, 40, text_color, BOLD);
             }
             dist = visionDist * (s->scene.is_metric ? 1 : METER_TO_FOOT);
             if (dist > 0.0) {
                 sprintf(str, "%.1f", dist);
                 wStr = 32 * (strlen(str) + 0);
-                ui_fill_rect(s->vg, { (int)(x + w - wStr / 2), (int)(disp_y - 35), wStr, 42 }, COLOR_BLUE, 15);
+                ui_fill_rect(s->vg, { (int)(x + w - wStr / 2), (int)(disp_y - 35), wStr, 42 }, COLOR_BLUE_ALPHA(180), 15);
                 ui_draw_text(s, x + w, disp_y, str, 40, text_color, BOLD);
             }
         }
@@ -817,7 +817,7 @@ public:
             ui_draw_line2(s, px, py, 7, &pcolor, nullptr, 3.0f);
         }
         if (isLeadDetected()) {
-            NVGcolor radar_stroke = COLOR_BLUE;
+            NVGcolor radar_stroke = COLOR_BLUE_ALPHA(180);
             if (lead_two_status > 0) {
               radar_stroke = COLOR_OCHRE;
               int path_width2 = lead_two_xr - lead_two_xl;
@@ -1105,7 +1105,7 @@ protected:
                 nvgFillColor(s->vg, COLOR_WHITE);
                 nvgFill(s->vg);
                 sprintf(str, "%d", (int)(xSpdLimit * ((s->scene.is_metric)?1:KM_TO_MILE) + 0.5));
-                ui_draw_text(s, bx, by + 25 * scale - 6 * (1 - scale), str, 60 * scale, COLOR_BLACK, BOLD, 0.0f, 0.0f);
+                ui_draw_text(s, bx, by + 25 * scale - 6 * (1 - scale), str, 60 * scale, COLOR_BLACK_ALPHA(180), BOLD, 0.0f, 0.0f);
             }
         }
 	}
@@ -1150,7 +1150,7 @@ protected:
             int bx = tbt_x + 100;
             int by = tbt_y + 85;
             if (atc_type.length() > 0) {
-              stroke_color = COLOR_BLACK;
+              stroke_color = COLOR_BLACK_ALPHA(180);
               ui_fill_rect(s->vg, { bx - 80, by - 90, 160, 230 }, atc_type.contains("prepare")?COLOR_GREEN_ALPHA(100) : COLOR_GREEN_ALPHA(200), 15, 1.0f, &stroke_color);
             }
             switch (xTurnInfo) {
@@ -1184,7 +1184,7 @@ protected:
             float text_width = bounds[2] - bounds[0];
             float text_height = bounds[3] - bounds[1];
             ui_fill_rect(s->vg, { (int)bounds[0] - 10, (int)bounds[1] - 2, (int)text_width + 20, (int)text_height + 13 }, COLOR_GREEN_ALPHA(180), 10);
-            ui_draw_text(s, tbt_x + 200, tbt_y + 200, szPosRoadName.toStdString().c_str(), 40, COLOR_WHITE_ALPHA(200), BOLD);
+            ui_draw_text(s, tbt_x + 200, tbt_y + 200, szPosRoadName.toStdString().c_str(), 40, COLOR_WHITE_ALPHA(220), BOLD);
         }
 
         if (nGoPosDist > 0 && nGoPosTime > 0) {
@@ -1195,9 +1195,9 @@ protected:
             mktime(local);
             bool is_kor = s->language == "main_ko";
             sprintf(str, "%s: %.1f%s(%02d:%02d)", (is_kor)?"到达":"预计", (float)nGoPosTime / 60., (is_kor)?"分钟":"分钟", local->tm_hour, local->tm_min);
-            ui_draw_text(s, tbt_x + 190, tbt_y + 80, str, 50, COLOR_WHITE_ALPHA(200), BOLD);
+            ui_draw_text(s, tbt_x + 190, tbt_y + 80, str, 50, COLOR_WHITE_ALPHA(220), BOLD);
             sprintf(str, "剩余:%.1f%s", nGoPosDist / 1000. * ((s->scene.is_metric)?1:KM_TO_MILE), (s->scene.is_metric) ? "公里" : "英里");
-            ui_draw_text(s, tbt_x + 190, tbt_y + 130, str, 50, COLOR_WHITE_ALPHA(200), BOLD);
+            ui_draw_text(s, tbt_x + 190, tbt_y + 130, str, 50, COLOR_WHITE_ALPHA(220), BOLD);
         }
         return 0;
     }
@@ -1288,30 +1288,30 @@ public:
         else if (desireStateLaneChangeRight > 0.5) ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
         if (desireEvent == 57) {
             ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_steer", 1.0f);
-            ui_draw_image(s, { x - icon_size / 2 - 70, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
+            ui_draw_image(s, { x - icon_size / 2 - 80, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
         }
         else if (desireEvent == 58) {
             ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_steer", 1.0f);
-            ui_draw_image(s, { x - icon_size / 2 + 70, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
+            ui_draw_image(s, { x - icon_size / 2 + 80, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
         }
         else if (desireEvent == 71) {
             if (laneChangeDirection == cereal::LaneChangeDirection::LEFT) {
                 ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_inhibit", 1.0f);
-                ui_draw_image(s, { x - icon_size / 2 - 70, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 - 80, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
             }
             else if (laneChangeDirection == cereal::LaneChangeDirection::RIGHT) {
                 ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_inhibit", 1.0f);
-                ui_draw_image(s, { x - icon_size / 2 + 70, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 + 80, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
             }
         }
         if (laneChangeState == cereal::LaneChangeState::PRE_LANE_CHANGE) {
             if (laneChangeDirection == cereal::LaneChangeDirection::LEFT) {
                 ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_steer", 1.0f);
-                ui_draw_image(s, { x - icon_size / 2 - 70, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 - 80, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
             }
             else if (laneChangeDirection == cereal::LaneChangeDirection::RIGHT) {
                 ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_steer", 1.0f);
-                ui_draw_image(s, { x - icon_size / 2 + 70, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 + 80, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
             }
         }
 
@@ -2167,7 +2167,7 @@ public:
                 wStr = 35 * (int)strlen(str);
                 ui_fill_rect(s->vg,
                   { (int)(x - wStr / 2), (int)(y - 35), wStr, 42 },
-                  (!radar) ? COLOR_BLUE : (model_prob == 0.01f) ? COLOR_GREEN_ALPHA(200) : (v_sum > 0.f) ? COLOR_ORANGE_ALPHA(200) : COLOR_RED_ALPHA(200),
+                  (!radar) ? COLOR_BLUE_ALPHA(180) : (model_prob == 0.01f) ? COLOR_GREEN_ALPHA(200) : (v_sum > 0.f) ? COLOR_ORANGE_ALPHA(200) : COLOR_RED_ALPHA(200),
                   15);
                 ui_draw_text(s, x, y, str, 40, COLOR_WHITE_ALPHA(200), BOLD);
 
@@ -2541,7 +2541,7 @@ public:
             nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
             if (show_datetime == 1 || show_datetime == 2) {
                 strftime(str, sizeof(str), "%H:%M", local);
-                ui_draw_text(s, x, y, str, 100, COLOR_WHITE_ALPHA(200), BOLD, 0.0f, 0.0f);
+                ui_draw_text(s, x, y, str, 100, COLOR_WHITE_ALPHA(220), BOLD, 0.0f, 0.0f);
 
             }
             if (show_datetime == 1 || show_datetime == 3) {
@@ -2551,7 +2551,7 @@ public:
                 int weekday_index = local->tm_wday; // tm_wday: 0=일, 1=월, ..., 6=토
                 snprintf(str + strlen(str), sizeof(str) - strlen(str), "(%s)", weekdays_ko[weekday_index]);
 
-                ui_draw_text(s, x, y + 70, str, 60, COLOR_WHITE_ALPHA(200), BOLD, 0.0f, 0.0f);
+                ui_draw_text(s, x, y + 70, str, 60, COLOR_WHITE_ALPHA(220), BOLD, 0.0f, 0.0f);
             //     nav_y += 70;
             }
             // if (false && szPosRoadName.size() > 0) {
@@ -2576,7 +2576,7 @@ public:
 
         // 显示"最高定速"文字
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_TOP);
-        ui_draw_text(s, box_x + box_width / 2, box_y + 20, tr("最高定速").toStdString().c_str(), 40, COLOR_ORANGE_ALPHA(200), BOLD);
+        ui_draw_text(s, box_x + box_width / 2, box_y + 20, tr("最高定速").toStdString().c_str(), 40, COLOR_OCHRE_ALPHA(200), BOLD);
 
         // 显示定速速度值
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
@@ -2960,8 +2960,8 @@ public:
         ui_fill_rect(vg, { 0,0, w, h / 2  - 100}, bg, 15);
         ui_fill_rect(vg, { 0, h / 2 + 100, w, h }, bg_long, 15);
 
-        ui_fill_rect(vg, {w - 50, h/2 - 95, 50, 190}, (_right_blinker)?COLOR_ORANGE_ALPHA(200):COLOR_BLACK, 15);
-        ui_fill_rect(vg, {0, h/2 - 95, 50, 190}, (_left_blinker)?COLOR_ORANGE_ALPHA(200):COLOR_BLACK, 15);
+        ui_fill_rect(vg, {w - 50, h/2 - 95, 50, 190}, (_right_blinker)?COLOR_ORANGE_ALPHA(200):COLOR_BLACK_ALPHA(180), 15);
+        ui_fill_rect(vg, {0, h/2 - 95, 50, 190}, (_left_blinker)?COLOR_ORANGE_ALPHA(200):COLOR_BLACK_ALPHA(180), 15);
 
         const SubMaster& sm = *(s->sm);
         auto car_state = sm["carState"].getCarState();
