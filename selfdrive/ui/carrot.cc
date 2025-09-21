@@ -491,7 +491,7 @@ public:
         */
         if (s->fb_w < 1200) return;
 
-        NVGcolor color[3] = { COLOR_YELLOW, COLOR_GREEN, COLOR_ORANGE };
+        NVGcolor color[3] = { COLOR_YELLOW_ALPHA(200), COLOR_GREEN_ALPHA(200), COLOR_ORANGE_ALPHA(200) };
         for (int i = 0; i < 3; i++) {
             drawPlotting(s, i, plotIndex, plotX, plotQueue[i], plotSize, &color[i], 3.0f);
         }
@@ -770,7 +770,7 @@ public:
             //ui_draw_text(s, x, disp_y, str, disp_size, COLOR_WHITE, BOLD);
             int wStr = 0, w = 80;
             float dist = radarDist * (s->scene.is_metric ? 1 : METER_TO_FOOT);
-            NVGcolor text_color = (xState==0) ? COLOR_WHITE : (xState==1) ? COLOR_GREY : COLOR_GREEN;
+            NVGcolor text_color = (xState==0) ? COLOR_WHITE_ALPHA(200) : (xState==1) ? COLOR_GREY_ALPHA(200) : COLOR_GREEN_ALPHA(200);
             if (dist > 0.0) {
                 sprintf(str, "%.1f", dist);
                 wStr = 32 * (strlen(str) + 0);
@@ -796,8 +796,8 @@ public:
 
 
         float px[7], py[7];
-        NVGcolor rcolor = isLeadSCC() ? COLOR_RED : COLOR_ORANGE;
-        NVGcolor  pcolor = !isRadarDetected() ? ((trafficState == 1) ? rcolor : COLOR_GREEN) : isRadarDetected() ? rcolor : COLOR_BLUE;
+        NVGcolor rcolor = isLeadSCC() ? COLOR_RED_ALPHA(200) : COLOR_ORANGE_ALPHA(200);
+        NVGcolor  pcolor = !isRadarDetected() ? ((trafficState == 1) ? rcolor : COLOR_GREEN_ALPHA(200)) : isRadarDetected() ? rcolor : COLOR_BLUE_ALPHA(200);
         bool show_path_end = true;
         if (false && show_path_end && !isLeadDetected()) {
             px[0] = path_x - path_width / 2;
@@ -2155,10 +2155,10 @@ public:
                   QPolygonF vertext;
                   vertext.push_back(side);
                   vertext.push_back(a_side);
-                  ui_draw_line(s, vertext, nullptr, nullptr, 3.0, (v_sum > 0.f)? COLOR_GREEN: COLOR_RED);
+                  ui_draw_line(s, vertext, nullptr, nullptr, 3.0, (v_sum > 0.f)? COLOR_GREEN_ALPHA(200): COLOR_RED)_ALPHA(200);
                   nvgBeginPath(s->vg);
                   nvgCircle(s->vg, ax, ay, 10);
-                  nvgFillColor(s->vg, (v_sum > 0.f) ? COLOR_GREEN : COLOR_RED);
+                  nvgFillColor(s->vg, (v_sum > 0.f) ? COLOR_GREEN_ALPHA(200) : COLOR_RED)_ALPHA(200);
                   nvgFill(s->vg);
                 }
 
@@ -2167,9 +2167,9 @@ public:
                 wStr = 35 * (int)strlen(str);
                 ui_fill_rect(s->vg,
                   { (int)(x - wStr / 2), (int)(y - 35), wStr, 42 },
-                  (!radar) ? COLOR_BLUE : (model_prob == 0.01f) ? COLOR_GREEN : (v_sum > 0.f) ? COLOR_ORANGE : COLOR_RED,
+                  (!radar) ? COLOR_BLUE : (model_prob == 0.01f) ? COLOR_GREEN_ALPHA(200) : (v_sum > 0.f) ? COLOR_ORANGE_ALPHA(200) : COLOR_RED_ALPHA(200),
                   15);
-                ui_draw_text(s, x, y, str, 40, COLOR_WHITE, BOLD);
+                ui_draw_text(s, x, y, str, 40, COLOR_WHITE_ALPHA(200), BOLD);
 
                 if (show_radar_info >= 2) {
                   sprintf(str, "%.1f", y_rel);
@@ -2256,7 +2256,7 @@ public:
                 if(isnan(x) || isnan(y)) continue;
 				nvgBeginPath(s->vg);
                 nvgCircle(s->vg, x, y, 10);
-                nvgFillColor(s->vg, COLOR_GREEN);
+                nvgFillColor(s->vg, COLOR_GREEN_ALPHA(200));
                 nvgFill(s->vg);
 			}
         }
@@ -2535,7 +2535,7 @@ public:
             struct tm* local = localtime(&now);
 
             int x = 170;// s->fb_w - 300;
-            int y = tbt_y - 40;// 150;
+            int y = 800;// 150;
             int nav_y = y + 50;
 
             nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
@@ -2576,7 +2576,7 @@ public:
 
         // 显示"最高定速"文字
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_TOP);
-        ui_draw_text(s, box_x + box_width / 2, box_y + 20, tr("最高定速").toStdString().c_str(), 40, COLOR_ORANGE_ALPHA(200), BOLD);
+        ui_draw_text(s, box_x + box_width / 2, box_y + 20, tr("最高定速").toStdString().c_str(), 40, COLOR_GREEN_ALPHA(200), BOLD);
 
         // 显示定速速度值
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
@@ -2960,15 +2960,15 @@ public:
         ui_fill_rect(vg, { 0,0, w, h / 2  - 100}, bg, 15);
         ui_fill_rect(vg, { 0, h / 2 + 100, w, h }, bg_long, 15);
 
-        ui_fill_rect(vg, {w - 50, h/2 - 95, 50, 190}, (_right_blinker)?COLOR_ORANGE:COLOR_BLACK, 15);
-        ui_fill_rect(vg, {0, h/2 - 95, 50, 190}, (_left_blinker)?COLOR_ORANGE:COLOR_BLACK, 15);
+        ui_fill_rect(vg, {w - 50, h/2 - 95, 50, 190}, (_right_blinker)?COLOR_ORANGE_ALPHA(200):COLOR_BLACK, 15);
+        ui_fill_rect(vg, {0, h/2 - 95, 50, 190}, (_left_blinker)?COLOR_ORANGE_ALPHA(200):COLOR_BLACK, 15);
 
         const SubMaster& sm = *(s->sm);
         auto car_state = sm["carState"].getCarState();
         float a_ego = car_state.getAEgo();
 
         a_ego_width = a_ego_width * 0.5 + (w * std::abs(a_ego) / 4.0) * 0.5;
-        ui_fill_rect(vg, { w/2 - (int)(a_ego_width / 2), h - 30, (int)a_ego_width, 30 }, (a_ego >= 0)? COLOR_YELLOW : COLOR_RED, 15);
+        ui_fill_rect(vg, { w/2 - (int)(a_ego_width / 2), h - 30, (int)a_ego_width, 30 }, (a_ego >= 0)? COLOR_YELLOW_ALPHA(200) : COLOR_RED_ALPHA(200), 15);
 
         steering_angle_pos = steering_angle_pos * 0.5 + (w / 2. - w / 2. * car_state.getSteeringAngleDeg() / 90) * 0.5;
         int x_st = (int)steering_angle_pos - 50;
@@ -2977,7 +2977,7 @@ public:
         if (x_ed < 50) x_ed = 50;
         if (x_st > w - 50) x_st = w - 50;
         if (x_ed > w) x_ed = w;
-        ui_fill_rect(vg, { x_st, 0, x_ed - x_st, 30 }, COLOR_ORANGE, 15);
+        ui_fill_rect(vg, { x_st, 0, x_ed - x_st, 30 }, COLOR_ORANGE_ALPHA(200), 15);
 
 
         // char top[256] = "", top_left[256] = "", top_right[256] = "";
