@@ -938,11 +938,11 @@ This may take up to a minute.</source>
     </message>
     <message>
         <source>Onroad/Offroad Mode</source>
-        <translation>车辆在线/离线模式</translation>
+        <translation>设置模式/行驶模式</translation>
     </message>
     <message>
         <source>Go Offroad</source>
-        <translation>进入离线</translation>
+        <translation>进入设置模式</translation>
     </message>
     <message>
         <source>Are you sure you want to switch mode?</source>
@@ -954,7 +954,7 @@ This may take up to a minute.</source>
     </message>
     <message>
         <source>Go Onroad</source>
-        <translation>回到在线</translation>
+        <translation>进入行驶模式</translation>
     </message>
 </context>
 <context>
