@@ -1297,21 +1297,21 @@ public:
         else if (desireEvent == 71) {
             if (laneChangeDirection == cereal::LaneChangeDirection::LEFT) {
                 ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_inhibit", 1.0f);
-                ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 - 70, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
             }
             else if (laneChangeDirection == cereal::LaneChangeDirection::RIGHT) {
                 ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_inhibit", 1.0f);
-                ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 + 70, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
             }
         }
         if (laneChangeState == cereal::LaneChangeState::PRE_LANE_CHANGE) {
             if (laneChangeDirection == cereal::LaneChangeDirection::LEFT) {
                 ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_steer", 1.0f);
-                ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 - 70, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
             }
             else if (laneChangeDirection == cereal::LaneChangeDirection::RIGHT) {
                 ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_steer", 1.0f);
-                ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 + 70, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
             }
         }
 
