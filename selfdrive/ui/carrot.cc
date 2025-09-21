@@ -2155,10 +2155,10 @@ public:
                   QPolygonF vertext;
                   vertext.push_back(side);
                   vertext.push_back(a_side);
-                  ui_draw_line(s, vertext, nullptr, nullptr, 3.0, (v_sum > 0.f)? COLOR_GREEN_ALPHA(200): COLOR_RED)_ALPHA(200);
+                  ui_draw_line(s, vertext, nullptr, nullptr, 3.0, (v_sum > 0.f)? COLOR_GREEN_ALPHA(200): COLOR_RED_ALPHA(200);
                   nvgBeginPath(s->vg);
                   nvgCircle(s->vg, ax, ay, 10);
-                  nvgFillColor(s->vg, (v_sum > 0.f) ? COLOR_GREEN_ALPHA(200) : COLOR_RED)_ALPHA(200);
+                  nvgFillColor(s->vg, (v_sum > 0.f) ? COLOR_GREEN_ALPHA(200) : COLOR_RED_ALPHA(200);
                   nvgFill(s->vg);
                 }
 
@@ -2536,7 +2536,7 @@ public:
 
             int x = 170;// s->fb_w - 300;
             int y = 800;// 150;
-            int nav_y = y + 50;
+            // int nav_y = y + 50;
 
             nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
             if (show_datetime == 1 || show_datetime == 2) {
