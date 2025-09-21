@@ -936,6 +936,26 @@ This may take up to a minute.</source>
         <source>never</source>
         <translation>从未更新</translation>
     </message>
+    <message>
+        <source>Onroad/Offroad Mode</source>
+        <translation>车辆在线/离线模式</translation>
+    </message>
+    <message>
+        <source>Go Offroad</source>
+        <translation>进入离线</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to switch mode?</source>
+        <translation>您确定要切换模式吗？</translation>
+    </message>
+    <message>
+        <source>CONFIRM</source>
+        <translation>确认</translation>
+    </message>
+    <message>
+        <source>Go Onroad</source>
+        <translation>回到在线</translation>
+    </message>
 </context>
 <context>
     <name>SshControl</name>
