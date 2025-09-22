@@ -2599,7 +2599,7 @@ public:
       const auto lp = sm["longitudinalPlan"].getLongitudinalPlan();
 
       int trafficStatecarrot = carrot_man.getTrafficState();
-      int trafficState = lp.getTrafficState();
+      int currentTrafficState = lp.getTrafficState();
 
       // 设置显示位置
       int x = 240;
@@ -2607,8 +2607,8 @@ public:
       int traffic_icon_size = 256;
 
       // 确定交通灯状态
-      bool red_light = trafficState == 1;
-      bool green_light = trafficState == 2;
+      bool red_light = currentTrafficState == 1;
+      bool green_light = currentTrafficState == 2;
 
       if(trafficStatecarrot == 1) {
           red_light = true;
