@@ -46,6 +46,8 @@
 #define COLOR_GREY nvgRGBA(191, 191, 191, 1)
 #define COLOR_GREY_ALPHA(x) nvgRGBA(191, 191, 191, x)
 
+#define COLOR_MY_ALPHA(x) nvgRGBA(127, 255, 0, x)
+
 #define BOLD "KaiGenGothicKR-Bold"//"Inter-Bold"//"sans-bold"
 
 
@@ -2576,11 +2578,11 @@ public:
 
         // 显示"最高定速"文字
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_TOP);
-        ui_draw_text(s, box_x + box_width / 2, box_y + 20, tr("最高定速").toStdString().c_str(), 40, COLOR_OCHRE_ALPHA(200), BOLD);
+        ui_draw_text(s, box_x + box_width / 2, box_y + 20, tr("最高定速").toStdString().c_str(), 40, COLOR_MY_ALPHA(230), BOLD, 0.0f, 0.0f);
 
         // 显示定速速度值
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        ui_draw_text(s, box_x + box_width / 2, box_y + 130, cruise_speed, 90, COLOR_WHITE_ALPHA(200), BOLD);
+        ui_draw_text(s, box_x + box_width / 2, box_y + 125, cruise_speed, 90, COLOR_WHITE_ALPHA(220), BOLD, 0.0f, 0.0f);
     }
     void drawConnInfo(const UIState* s) {
         int y = 10;
