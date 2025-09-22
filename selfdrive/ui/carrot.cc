@@ -3062,6 +3062,7 @@ public:
         // bottom_left
         // QString gitBranch = QString::fromStdString(params.get("GitBranch"));
         // sprintf(bottom_left, "%s", gitBranch.toStdString().c_str());
+        char bottom_left[256] = "";
         QString deviceInfo = QString::asprintf("CPU:%.0f°C 内存:%d%% 存储:%.0f%%",
                                              drawCarrot.cpuTemp,
                                              drawCarrot.memoryUsage,
@@ -3079,7 +3080,7 @@ public:
         //     sprintf(bottom_right, "%s", ipAddress.toStdString().c_str());
         // }
 
-        // int text_margin = 30;
+        int text_margin = 30;
         // top
         // nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_TOP);
         // ui_draw_text_vg(vg, w / 2, 0, top, 30, COLOR_WHITE, BOLD);
@@ -3093,8 +3094,8 @@ public:
         // nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
         // ui_draw_text_vg(vg, w / 2, h, bottom, 30, COLOR_WHITE, BOLD);
         // bottom left
-        // nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_BOTTOM);
-        // ui_draw_text_vg(vg, text_margin, h, bottom_left, 30, COLOR_WHITE, BOLD);
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_BOTTOM);
+        ui_draw_text_vg(vg, text_margin, h, bottom_left, 30, COLOR_WHITE, BOLD);
         // bottom right
         // nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_BOTTOM);
         // ui_draw_text_vg(vg, w- text_margin, h, bottom_right, 30, COLOR_WHITE, BOLD);
