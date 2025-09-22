@@ -2590,8 +2590,16 @@ public:
 
       // 获取交通灯状态
       SubMaster& sm = *(s->sm);
+
+      if (!sm.alive("carrotMan") || !sm.alive("longitudinalPlan")) {
+        return;
+      }
+
       const auto carrot_man = sm["carrotMan"].getCarrotMan();
+      const auto lp = sm["longitudinalPlan"].getLongitudinalPlan();
+
       int trafficStatecarrot = carrot_man.getTrafficState();
+      int trafficState = lp.getTrafficState();
 
       // 设置显示位置
       int x = 240;
@@ -2613,10 +2621,10 @@ public:
 
       // 绘制交通灯
       if (red_light) {
-          ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, traffic_icon_size, traffic_icon_size }, "ic_traffic_red", 1.0f);
+          ui_draw_image(s, { x - traffic_icon_size / 2, y - traffic_icon_size / 2, traffic_icon_size, traffic_icon_size }, "ic_traffic_red", 1.0f);
       }
       else if (green_light) {
-          ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, traffic_icon_size, traffic_icon_size }, "ic_traffic_green", 1.0f);
+          ui_draw_image(s, { x - traffic_icon_size / 2, y - traffic_icon_size / 2, traffic_icon_size, traffic_icon_size }, "ic_traffic_green", 1.0f);
       }
     }
 
@@ -3063,7 +3071,7 @@ public:
         // QString gitBranch = QString::fromStdString(params.get("GitBranch"));
         // sprintf(bottom_left, "%s", gitBranch.toStdString().c_str());
         char bottom_left[256] = "";
-        QString deviceInfo = QString::asprintf("CPU:%.0f°C 内存:%d%% 存储:%.0f%%",
+        QString deviceInfo = QString::asprintf("CPU:%.0f°C   内存:%d%%   存储:%.0f%%",
                                              drawCarrot.cpuTemp,
                                              drawCarrot.memoryUsage,
                                              100 - drawCarrot.freeSpace);
