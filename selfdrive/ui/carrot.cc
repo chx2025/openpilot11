@@ -2596,7 +2596,7 @@ public:
       // 设置显示位置
       int x = 240;
       int y = 20;
-      int icon_size = 256;
+      int traffic_icon_size = 256;
 
       // 确定交通灯状态
       bool red_light = trafficState == 1;
@@ -2604,19 +2604,19 @@ public:
 
       if(trafficState_carrot == 1) {
           red_light = true;
-          icon_size *= 1.5; // 与drawHud中的*1.5状态一致
+          traffic_icon_size *= 1.5; // 与drawHud中的*1.5状态一致
       }
       else if(trafficState_carrot == 2) {
           green_light = true;
-          icon_size *= 1.5; // 与drawHud中的*1.5状态一致
+          traffic_icon_size *= 1.5; // 与drawHud中的*1.5状态一致
       }
 
       // 绘制交通灯
       if (red_light) {
-          ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_traffic_red", 1.0f);
+          ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, traffic_icon_size, traffic_icon_size }, "ic_traffic_red", 1.0f);
       }
       else if (green_light) {
-          ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_traffic_green", 1.0f);
+          ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, traffic_icon_size, traffic_icon_size }, "ic_traffic_green", 1.0f);
       }
     }
 
