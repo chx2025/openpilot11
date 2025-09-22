@@ -3062,6 +3062,11 @@ public:
         // bottom_left
         // QString gitBranch = QString::fromStdString(params.get("GitBranch"));
         // sprintf(bottom_left, "%s", gitBranch.toStdString().c_str());
+        QString deviceInfo = QString::asprintf("CPU:%.0f°C 内存:%d%% 存储:%.0f%%",
+                                             drawCarrot.cpuTemp,
+                                             drawCarrot.memoryUsage,
+                                             100 - drawCarrot.freeSpace);
+        sprintf(bottom_left, "%s", deviceInfo.toStdString().c_str());
 
         // bottom_right
         // Params params_memory = Params("/dev/shm/params");
