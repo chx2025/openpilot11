@@ -2591,7 +2591,7 @@ public:
       // 获取交通灯状态
       SubMaster& sm = *(s->sm);
       const auto carrot_man = sm["carrotMan"].getCarrotMan();
-      int trafficState_carrot = carrot_man.getTrafficState();
+      int trafficStatecarrot = carrot_man.getTrafficState();
 
       // 设置显示位置
       int x = 240;
@@ -2602,11 +2602,11 @@ public:
       bool red_light = trafficState == 1;
       bool green_light = trafficState == 2;
 
-      if(trafficState_carrot == 1) {
+      if(trafficStatecarrot == 1) {
           red_light = true;
           traffic_icon_size *= 1.5; // 与drawHud中的*1.5状态一致
       }
-      else if(trafficState_carrot == 2) {
+      else if(trafficStatecarrot == 2) {
           green_light = true;
           traffic_icon_size *= 1.5; // 与drawHud中的*1.5状态一致
       }
