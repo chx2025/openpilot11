@@ -58,7 +58,7 @@ ModelRenderer* _model = NULL;
 extern  int get_path_length_idx(const cereal::XYZTData::Reader& line, const float path_height);
 int g_fps= 0;
 
-static void ui_draw_text(const UIState* s, float x, float y, const char* string, float size, NVGcolor color, const char* font_name, float borderWidth=3.0, float shadowOffset=0.0, NVGcolor borderColor=COLOR_BLACK_ALPHA(180), NVGcolor shadowColor=COLOR_BLACK_ALPHA(180)) {
+static void ui_draw_text(const UIState* s, float x, float y, const char* string, float size, NVGcolor color, const char* font_name, float borderWidth=3.0, float shadowOffset=0.0, NVGcolor borderColor=COLOR_BLACK_ALPHA(100), NVGcolor shadowColor=COLOR_BLACK_ALPHA(100)) {
     y += 6;
     nvgFontFace(s->vg, font_name);
     nvgFontSize(s->vg, size);
@@ -80,7 +80,7 @@ static void ui_draw_text(const UIState* s, float x, float y, const char* string,
     nvgFillColor(s->vg, color);
     nvgText(s->vg, x, y, string, NULL);
 }
-static void ui_draw_text_vg(NVGcontext* vg, float x, float y, const char* string, float size, NVGcolor color, const char* font_name, float borderWidth = 3.0, float shadowOffset = 0.0, NVGcolor borderColor = COLOR_BLACK_ALPHA(180), NVGcolor shadowColor = COLOR_BLACK_ALPHA(180)) {
+static void ui_draw_text_vg(NVGcontext* vg, float x, float y, const char* string, float size, NVGcolor color, const char* font_name, float borderWidth = 3.0, float shadowOffset = 0.0, NVGcolor borderColor = COLOR_BLACK_ALPHA(100), NVGcolor shadowColor = COLOR_BLACK_ALPHA(100)) {
     //y += 6;
     nvgFontFace(vg, font_name);
     nvgFontSize(vg, size);
