@@ -1185,8 +1185,8 @@ protected:
             nvgTextBounds(s->vg, tbt_x + 200, tbt_y + 200, szPosRoadName.toStdString().c_str(), NULL, bounds);
             float text_width = bounds[2] - bounds[0];
             float text_height = bounds[3] - bounds[1];
-            ui_fill_rect(s->vg, { (int)bounds[0] - 10, (int)bounds[1] - 2, (int)text_width + 20, (int)text_height + 13 }, COLOR_GREEN_ALPHA(180), 10);
-            ui_draw_text(s, tbt_x + 200, tbt_y + 200, szPosRoadName.toStdString().c_str(), 40, COLOR_WHITE_ALPHA(220), BOLD);
+            ui_fill_rect(s->vg, { (int)bounds[0] - 10, (int)bounds[1] - 2, (int)text_width + 20, (int)text_height + 13 }, COLOR_GREEN_ALPHA(220), 10);
+            ui_draw_text(s, tbt_x + 200, tbt_y + 200, szPosRoadName.toStdString().c_str(), 40, COLOR_WHITE_ALPHA(230), BOLD);
         }
 
         if (nGoPosDist > 0 && nGoPosTime > 0) {
@@ -1197,9 +1197,9 @@ protected:
             mktime(local);
             bool is_kor = s->language == "main_ko";
             sprintf(str, "%s: %.1f%s(%02d:%02d)", (is_kor)?"到达":"预计", (float)nGoPosTime / 60., (is_kor)?"分钟":"分钟", local->tm_hour, local->tm_min);
-            ui_draw_text(s, tbt_x + 190, tbt_y + 80, str, 50, COLOR_WHITE_ALPHA(220), BOLD);
+            ui_draw_text(s, tbt_x + 190, tbt_y + 80, str, 50, COLOR_WHITE_ALPHA(230), BOLD);
             sprintf(str, "剩余:%.1f%s", nGoPosDist / 1000. * ((s->scene.is_metric)?1:KM_TO_MILE), (s->scene.is_metric) ? "公里" : "英里");
-            ui_draw_text(s, tbt_x + 190, tbt_y + 130, str, 50, COLOR_WHITE_ALPHA(220), BOLD);
+            ui_draw_text(s, tbt_x + 190, tbt_y + 130, str, 50, COLOR_WHITE_ALPHA(230), BOLD);
         }
         return 0;
     }
@@ -1290,30 +1290,30 @@ public:
         else if (desireStateLaneChangeRight > 0.5) ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
         if (desireEvent == 57) {
             ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_steer", 1.0f);
-            ui_draw_image(s, { x - icon_size / 2 - 80, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
+            ui_draw_image(s, { x - icon_size / 2 - 90, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
         }
         else if (desireEvent == 58) {
             ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_steer", 1.0f);
-            ui_draw_image(s, { x - icon_size / 2 + 80, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
+            ui_draw_image(s, { x - icon_size / 2 + 90, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
         }
         else if (desireEvent == 71) {
             if (laneChangeDirection == cereal::LaneChangeDirection::LEFT) {
                 ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_inhibit", 1.0f);
-                ui_draw_image(s, { x - icon_size / 2 - 80, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 - 90, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
             }
             else if (laneChangeDirection == cereal::LaneChangeDirection::RIGHT) {
                 ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_inhibit", 1.0f);
-                ui_draw_image(s, { x - icon_size / 2 + 80, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 + 90, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
             }
         }
         if (laneChangeState == cereal::LaneChangeState::PRE_LANE_CHANGE) {
             if (laneChangeDirection == cereal::LaneChangeDirection::LEFT) {
                 ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_steer", 1.0f);
-                ui_draw_image(s, { x - icon_size / 2 - 80, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 - 90, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_l", 1.0f);
             }
             else if (laneChangeDirection == cereal::LaneChangeDirection::RIGHT) {
                 ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_steer", 1.0f);
-                ui_draw_image(s, { x - icon_size / 2 + 80, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 + 90, y - icon_size / 2, icon_size, icon_size }, "ic_lane_change_r", 1.0f);
             }
         }
 
@@ -2543,7 +2543,7 @@ public:
             nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
             if (show_datetime == 1 || show_datetime == 2) {
                 strftime(str, sizeof(str), "%H:%M", local);
-                ui_draw_text(s, x, y, str, 100, COLOR_WHITE_ALPHA(220), BOLD, 0.0f, 0.0f);
+                ui_draw_text(s, x, y, str, 100, COLOR_WHITE_ALPHA(220), BOLD, 3.0f, 0.0f);
 
             }
             if (show_datetime == 1 || show_datetime == 3) {
@@ -2553,7 +2553,7 @@ public:
                 int weekday_index = local->tm_wday; // tm_wday: 0=일, 1=월, ..., 6=토
                 snprintf(str + strlen(str), sizeof(str) - strlen(str), "(%s)", weekdays_ko[weekday_index]);
 
-                ui_draw_text(s, x, y + 70, str, 60, COLOR_WHITE_ALPHA(220), BOLD, 0.0f, 0.0f);
+                ui_draw_text(s, x, y + 70, str, 60, COLOR_WHITE_ALPHA(220), BOLD, 3.0f, 0.0f);
             //     nav_y += 70;
             }
             // if (false && szPosRoadName.size() > 0) {
@@ -2584,6 +2584,42 @@ public:
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
         ui_draw_text(s, box_x + box_width / 2, box_y + 125, cruise_speed, 90, COLOR_WHITE_ALPHA(220), BOLD, 0.0f, 0.0f);
     }
+
+    void drawTrafficLight(UIState* s) {
+      nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
+
+      // 获取交通灯状态
+      SubMaster& sm = *(s->sm);
+      const auto carrot_man = sm["carrotMan"].getCarrotMan();
+      int trafficState_carrot = carrot_man.getTrafficState();
+
+      // 设置显示位置
+      int x = 240;
+      int y = 20;
+      int icon_size = 256;
+
+      // 确定交通灯状态
+      bool red_light = trafficState == 1;
+      bool green_light = trafficState == 2;
+
+      if(trafficState_carrot == 1) {
+          red_light = true;
+          icon_size *= 1.5; // 与drawHud中的*1.5状态一致
+      }
+      else if(trafficState_carrot == 2) {
+          green_light = true;
+          icon_size *= 1.5; // 与drawHud中的*1.5状态一致
+      }
+
+      // 绘制交通灯
+      if (red_light) {
+          ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_traffic_red", 1.0f);
+      }
+      else if (green_light) {
+          ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_traffic_green", 1.0f);
+      }
+    }
+
     void drawConnInfo(const UIState* s) {
         int y = 10;
         int x = 30;
@@ -2880,6 +2916,7 @@ void ui_draw(UIState *s, ModelRenderer* model_renderer, int w, int h) {
   //drawCarrot.drawHud(s);
 
   drawCarrot.drawCruiseSpeedBox(s);
+  drawCarrot.drawTrafficLight(s);
 
   drawCarrot.drawDebug(s);
   drawCarrot.drawDateTime(s);
