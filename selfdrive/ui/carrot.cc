@@ -3064,7 +3064,7 @@ public:
         // QString gitBranch = QString::fromStdString(params.get("GitBranch"));
         // sprintf(bottom_left, "%s", gitBranch.toStdString().c_str());
         char bottom_left[256] = "";
-        QString deviceInfo = QString::asprintf("CPU:%.0f%% / %.0f°C   内存:%d%%   存储:%.0f%%",
+        QString deviceInfo = QString::asprintf("CPU:%.0f%% %.0f°C   内存:%d%%   存储:%.0f%%",
                                              drawCarrot.cpuUsage,
                                              drawCarrot.cpuTemp,
                                              drawCarrot.memoryUsage,
