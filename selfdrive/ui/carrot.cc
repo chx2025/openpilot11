@@ -1330,11 +1330,11 @@ public:
         if (blinker_timer <= 8) {
             if (right_blinker) {
 		_right_blinker = true;
-                ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_blinker_r", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 + 20, y - icon_size / 2, icon_size, icon_size }, "ic_blinker_r", 1.0f);
             }
             if (left_blinker) {
 		_left_blinker = true;
-                ui_draw_image(s, { x - icon_size / 2, y - icon_size / 2, icon_size, icon_size }, "ic_blinker_l", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 - 20, y - icon_size / 2, icon_size, icon_size }, "ic_blinker_l", 1.0f);
             }
         }
     }
