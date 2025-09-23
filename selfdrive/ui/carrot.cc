@@ -2615,12 +2615,8 @@ public:
           traffic_icon_size *= 1.5;
 
       // 绘制交通灯
-      if (red_light) {
-          ui_draw_image(s, { x, y, traffic_icon_size, traffic_icon_size }, "ic_traffic_red", 1.0f);
-      }
-      else if (green_light) {
-          ui_draw_image(s, { x, y, traffic_icon_size, traffic_icon_size }, "ic_traffic_green", 1.0f);
-      }
+      if (red_light) ui_draw_image(s, { x, y, traffic_icon_size, traffic_icon_size }, "ic_traffic_red", 1.0f);
+      else if (green_light) ui_draw_image(s, { x, y, traffic_icon_size, traffic_icon_size }, "ic_traffic_green", 1.0f);
     }
 
     void drawConnInfo(const UIState* s) {
