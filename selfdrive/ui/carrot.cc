@@ -1190,13 +1190,14 @@ protected:
         }
 
         if (nGoPosDist > 0 && nGoPosTime > 0) {
-            time_t now = time(NULL);  // 현재 시간 얻기
+            time_t now = time(NULL);  // 获取当前时间
             struct tm* local = localtime(&now);
             int remaining_minutes = (int)nGoPosTime / 60;
             local->tm_min += remaining_minutes;
             mktime(local);
             bool is_kor = s->language == "main_ko";
-            sprintf(str, "%s: %.1f%s(%02d:%02d)", (is_kor)?"到达":"预计", (float)nGoPosTime / 60., (is_kor)?"分钟":"分钟", local->tm_hour, local->tm_min);
+            int total_minutes = (nGoPosTime + 59) / 60;
+            sprintf(str, "%s: %d%s(%02d:%02d到)", (is_kor)?"到达":"行程", total_minutes, (is_kor)?"分钟":"分钟", local->tm_hour, local->tm_min);
             ui_draw_text(s, tbt_x + 190, tbt_y + 80, str, 50, COLOR_WHITE_ALPHA(230), BOLD);
             sprintf(str, "剩余:%.1f%s", nGoPosDist / 1000. * ((s->scene.is_metric)?1:KM_TO_MILE), (s->scene.is_metric) ? "公里" : "英里");
             ui_draw_text(s, tbt_x + 190, tbt_y + 130, str, 50, COLOR_WHITE_ALPHA(230), BOLD);
