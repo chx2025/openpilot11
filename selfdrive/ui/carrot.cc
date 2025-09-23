@@ -2592,10 +2592,6 @@ public:
       // 获取交通灯状态
       SubMaster& sm = *(s->sm);
 
-      if (!sm.alive("carrotMan") || !sm.alive("longitudinalPlan")) {
-        return;
-      }
-
       const auto carrot_man = sm["carrotMan"].getCarrotMan();
       const auto lp = sm["longitudinalPlan"].getLongitudinalPlan();
 
@@ -2904,6 +2900,9 @@ void ui_draw(UIState *s, ModelRenderer* model_renderer, int w, int h) {
   Params params;
   bool draw_carrot = drawCarrot.updateState(s);
   drawCarrot.drawNaviPath(s);
+
+  drawCarrot.drawTrafficLight(s);
+
   static float pathDrawSeq = 0.0;
   int show_lane_info = params.getInt("ShowLaneInfo");
   if(show_lane_info >= 0) drawPath.draw(s, pathDrawSeq);
@@ -2925,7 +2924,6 @@ void ui_draw(UIState *s, ModelRenderer* model_renderer, int w, int h) {
   //drawCarrot.drawHud(s);
 
   drawCarrot.drawCruiseSpeedBox(s);
-  drawCarrot.drawTrafficLight(s);
 
   drawCarrot.drawDebug(s);
   drawCarrot.drawDateTime(s);
@@ -3008,8 +3006,8 @@ public:
         ui_fill_rect(vg, { 0,0, w, h / 2  - 100}, bg, 15);
         ui_fill_rect(vg, { 0, h / 2 + 100, w, h }, bg_long, 15);
 
-        ui_fill_rect(vg, {w - 50, h/2 - 95, 50, 190}, (_right_blinker)?COLOR_ORANGE_ALPHA(200):COLOR_BLACK_ALPHA(180), 15);
-        ui_fill_rect(vg, {0, h/2 - 95, 50, 190}, (_left_blinker)?COLOR_ORANGE_ALPHA(200):COLOR_BLACK_ALPHA(180), 15);
+        ui_fill_rect(vg, {w - 50, h/2 - 95, 50, 190}, (_right_blinker)?COLOR_ORANGE_ALPHA(200):COLOR_BLACK_ALPHA(100), 15);
+        ui_fill_rect(vg, {0, h/2 - 95, 50, 190}, (_left_blinker)?COLOR_ORANGE_ALPHA(200):COLOR_BLACK_ALPHA(100), 15);
 
         const SubMaster& sm = *(s->sm);
         auto car_state = sm["carState"].getCarState();
