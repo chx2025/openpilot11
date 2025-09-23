@@ -2618,10 +2618,10 @@ public:
 
       // 绘制交通灯
       if (red_light) {
-          ui_draw_image(s, { x - traffic_icon_size / 2, y - traffic_icon_size / 2, traffic_icon_size, traffic_icon_size }, "ic_traffic_red", 1.0f);
+          ui_draw_image(s, { x, y, traffic_icon_size, traffic_icon_size }, "ic_traffic_red", 1.0f);
       }
       else if (green_light) {
-          ui_draw_image(s, { x - traffic_icon_size / 2, y - traffic_icon_size / 2, traffic_icon_size, traffic_icon_size }, "ic_traffic_green", 1.0f);
+          ui_draw_image(s, { x, y, traffic_icon_size, traffic_icon_size }, "ic_traffic_green", 1.0f);
       }
     }
 
