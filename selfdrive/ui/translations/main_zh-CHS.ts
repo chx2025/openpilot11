@@ -922,7 +922,7 @@ This may take up to a minute.</source>
     </message>
     <message>
         <source>up to date, last checked %1</source>
-        <translation>已经是最新版本，上次检查时间为 %1</translation>
+        <translation>已经是最新版本 %1</translation>
     </message>
     <message>
         <source>DOWNLOAD</source>
