@@ -1330,11 +1330,11 @@ public:
         if (blinker_timer <= 8) {
             if (right_blinker) {
 		_right_blinker = true;
-                ui_draw_image(s, { x - icon_size / 2 + 20, y - icon_size / 2, icon_size, icon_size }, "ic_blinker_r", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 + 60, y - icon_size / 2, icon_size, icon_size }, "ic_blinker_r", 1.0f);
             }
             if (left_blinker) {
 		_left_blinker = true;
-                ui_draw_image(s, { x - icon_size / 2 - 20, y - icon_size / 2, icon_size, icon_size }, "ic_blinker_l", 1.0f);
+                ui_draw_image(s, { x - icon_size / 2 - 60, y - icon_size / 2, icon_size, icon_size }, "ic_blinker_l", 1.0f);
             }
         }
     }
@@ -2301,19 +2301,19 @@ public:
 
     void drawTrafficLight(UIState* s) {
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
-        int x = 240;
-        int y = 20;
+        int x = 20;
+        int y = 250;
         int icon_red = icon_size;
         int icon_green = icon_size;
         bool red_light = trafficState == 1;
         bool green_light = trafficState == 2;
         if(trafficState_carrot == 1) {
 			red_light = true;
-            icon_red *= 1.5;
+            //icon_red *= 1.5;
 		}
 		else if(trafficState_carrot == 2) {
 			green_light = true;
-            icon_green *= 1.5;
+            //icon_green *= 1.5;
 		}
         if (red_light) ui_draw_image(s, { x, y, icon_red, icon_red }, "ic_traffic_red", 1.0f);
         else if (green_light) ui_draw_image(s, { x, y, icon_green, icon_green }, "ic_traffic_green", 1.0f);
