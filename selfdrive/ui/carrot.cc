@@ -731,7 +731,7 @@ public:
         int x = path_x;
         int y = path_y - 135;
         char str[128];
-        int disp_y = y + 195;// 175;
+        int disp_y = y + 105;// 向上移动90px;
         bool draw_dist = false;
         float disp_size = 90;
         if (softHoldActive || brakeHoldActive || carrotCruise) {
@@ -1196,7 +1196,7 @@ protected:
             local->tm_min += remaining_minutes;
             mktime(local);
             bool is_kor = s->language == "main_ko";
-            int total_minutes = (nGoPosTime + 59) / 60;
+            int total_minutes = (nGoPosTime + 30) / 60; // 行程时间四舍五入
             sprintf(str, "%s: %d%s(%02d:%02d到)", (is_kor)?"到达":"行程", total_minutes, (is_kor)?"分钟":"分钟", local->tm_hour, local->tm_min);
             ui_draw_text(s, tbt_x + 190, tbt_y + 80, str, 50, COLOR_WHITE_ALPHA(230), BOLD);
             sprintf(str, "剩余:%.1f%s", nGoPosDist / 1000. * ((s->scene.is_metric)?1:KM_TO_MILE), (s->scene.is_metric) ? "公里" : "英里");
@@ -2298,6 +2298,27 @@ public:
     int   memoryUsage = 0;
     float freeSpace = 0.0f;
     float voltage = 0.0f;
+
+    void drawTrafficLight(UIState* s) {
+        nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
+        int x = 240;
+        int y = 20;
+        int icon_red = icon_size;
+        int icon_green = icon_size;
+        bool red_light = trafficState == 1;
+        bool green_light = trafficState == 2;
+        if(trafficState_carrot == 1) {
+			red_light = true;
+            icon_red *= 1.5;
+		}
+		else if(trafficState_carrot == 2) {
+			green_light = true;
+            icon_green *= 1.5;
+		}
+        if (red_light) ui_draw_image(s, { x, y, icon_red, icon_red }, "ic_traffic_red", 1.0f);
+        else if (green_light) ui_draw_image(s, { x, y, icon_green, icon_green }, "ic_traffic_green", 1.0f);
+    }
+
     void drawHud(UIState* s) {
         int show_device_state = params.getInt("ShowDeviceState");
         blink_timer = (blink_timer + 1) % 16;
@@ -2586,45 +2607,6 @@ public:
         ui_draw_text(s, box_x + box_width / 2, box_y + 125, cruise_speed, 90, COLOR_WHITE_ALPHA(220), BOLD, 0.0f, 0.0f);
     }
 
-    void drawTrafficLight(UIState* s) {
-      nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
-
-      // 获取交通灯状态
-      SubMaster& sm = *(s->sm);
-
-      const auto carrot_man = sm["carrotMan"].getCarrotMan();
-      const auto lp = sm["longitudinalPlan"].getLongitudinalPlan();
-
-      int trafficStatecarrot = carrot_man.getTrafficState();
-      int currentTrafficState = lp.getTrafficState();
-
-      // 设置显示位置
-      int x = 240;
-      int y = 20;
-      int traffic_icon_size = 256;
-
-      // 确定交通灯状态
-      bool red_light = currentTrafficState == 1;
-      bool green_light = currentTrafficState == 2;
-
-      if(trafficStatecarrot == 1) {
-          red_light = true;
-          traffic_icon_size *= 1.5; // 与drawHud中的*1.5状态一致
-      }
-      else if(trafficStatecarrot == 2) {
-          green_light = true;
-          traffic_icon_size *= 1.5; // 与drawHud中的*1.5状态一致
-      }
-
-      // 绘制交通灯
-      if (red_light) {
-          ui_draw_image(s, { x, y, traffic_icon_size, traffic_icon_size }, "ic_traffic_red", 1.0f);
-      }
-      else if (green_light) {
-          ui_draw_image(s, { x, y, traffic_icon_size, traffic_icon_size }, "ic_traffic_green", 1.0f);
-      }
-    }
-
     void drawConnInfo(const UIState* s) {
         int y = 10;
         int x = 30;
@@ -2901,8 +2883,6 @@ void ui_draw(UIState *s, ModelRenderer* model_renderer, int w, int h) {
   bool draw_carrot = drawCarrot.updateState(s);
   drawCarrot.drawNaviPath(s);
 
-  drawCarrot.drawTrafficLight(s);
-
   static float pathDrawSeq = 0.0;
   int show_lane_info = params.getInt("ShowLaneInfo");
   if(show_lane_info >= 0) drawPath.draw(s, pathDrawSeq);
@@ -2920,6 +2900,8 @@ void ui_draw(UIState *s, ModelRenderer* model_renderer, int w, int h) {
 
   if(draw_carrot)
     drawCarrot.drawRadarInfo(s);
+
+  drawCarrot.drawTrafficLight(s);
 
   //drawCarrot.drawHud(s);
 
