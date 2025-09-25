@@ -2302,11 +2302,13 @@ public:
     void drawTrafficLight(UIState* s) {
         nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
         int x = 20;
-        int y = 250;
+        int y = 230;
         int icon_red = icon_size;
         int icon_green = icon_size;
+        int icon_no = icon_size;
         bool red_light = trafficState == 1;
         bool green_light = trafficState == 2;
+        bool no_light = !(trafficState_carrot == 1 || trafficState_carrot == 2);
         if(trafficState_carrot == 1) {
 			red_light = true;
             //icon_red *= 1.5;
@@ -2317,6 +2319,7 @@ public:
 		}
         if (red_light) ui_draw_image(s, { x, y, icon_red, icon_red }, "ic_traffic_red", 1.0f);
         else if (green_light) ui_draw_image(s, { x, y, icon_green, icon_green }, "ic_traffic_green", 1.0f);
+        else if (no_light) ui_draw_image(s, { x, y, icon_no, icon_no }, "ic_traffic_no", 1.0f);
     }
 
     void drawHud(UIState* s) {
@@ -3171,6 +3174,7 @@ void ui_nvg_init(UIState *s) {
   {"ic_speed_bg", "../assets/images/speed_bg.png"},
   {"ic_traffic_green", "../assets/images/traffic_green.png"},
   {"ic_traffic_red", "../assets/images/traffic_red.png"},
+  {"ic_traffic_no", "../assets/images/traffic_no.png"},
   {"ic_tire", "../assets/images/img_tire.png"},
   {"ic_road_speed", "../assets/images/road_speed.png"},
   {"ic_speed_bump", "../assets/images/speed_bump.png"},
