@@ -1,9 +1,8 @@
-Carrot2-v9 (2025-09-21)
+Carrot2-v9 (2025-09-xx)
 ========================
-* GWM Model
-* Lead + 1 detect 
+* TR16 Model
+* Lead + 1 detect
 * Improve radar vision matching
-* Auto safe-mode on stopped vehicle detection
 
 Carrot2-v9 (2025-09-xx)
 ========================

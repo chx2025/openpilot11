@@ -147,6 +147,12 @@ class CarrotPlanner:
       else:
         self.myDrivingMode = myDrivingMode
 
+      self.mySafeFactor = 1.0
+      if self.myDrivingMode == DrivingMode.Eco: # eco
+        self.mySafeFactor = self.myEcoModeFactor
+      elif self.myDrivingMode == DrivingMode.Safe: #safe
+        self.mySafeFactor = self.mySafeModeFactor
+
     if self.params_count == 10:
       self.myHighModeFactor = 1.2 #float(self.params.get_int("MyHighModeFactor")) / 100.
       self.trafficLightDetectMode = self.params.get_int("TrafficLightDetectMode") # 0: None, 1:Stop, 2:Stop&Go
@@ -206,14 +212,13 @@ class CarrotPlanner:
       self.desireState = 0.0
       self.desireStateCount = 0
 
-  def dynamic_t_follow(self, t_follow, lead, desired_follow_distance, prev_a):
+  def dynamic_t_follow(self, t_follow, lead, desired_follow_distance):
 
     self.jerk_factor_apply = self.jerk_factor
     if self.desireState > 0.9 and self.desireStateCount < int(1.5 / DT_MDL):  # lane change state, 1.5초동안만.
       t_follow *= self.dynamicTFollowLC   # 차선변경시 t_follow를 줄임.
       self.jerk_factor_apply = self.jerk_factor * self.dynamicTFollowLC   # 차선변경시 jerk factor를 줄여 aggresive하게
-    elif lead.status:
-      t_follow += np.interp(prev_a[0], [-2.0, -0.5], [0.2, 0.0])
+    elif lead.status:      
       if self.dynamicTFollow > 0.0:
         gap_dist_adjust = np.clip((desired_follow_distance - lead.dRel) * self.dynamicTFollow, - 0.1, 1.0) * 0.1
         t_follow += gap_dist_adjust
@@ -328,6 +333,7 @@ class CarrotPlanner:
 
   def update(self, sm, v_cruise_kph, mode):
     self._params_update()
+
     self._update_model_desire(sm)
 
     self.events = Events()
@@ -348,23 +354,14 @@ class CarrotPlanner:
     v_ego_cluster = carstate.vEgoCluster
     v_ego_cluster_kph = v_ego_cluster * CV.MS_TO_KPH
 
-    leadOne = radarstate.leadOne
-    self.mySafeFactor = 1.0
-    if leadOne.status and leadOne.vLead < 5:
-      self.myDrivingMode = DrivingMode.Safe
-    if self.myDrivingMode == DrivingMode.Eco: # eco
-      self.mySafeFactor = self.myEcoModeFactor
-    elif self.myDrivingMode == DrivingMode.Safe: #safe
-      self.mySafeFactor = self.mySafeModeFactor
-
     if self.frame % 20 == 0: # every 1 sec
       vLead = 0
       aLead = 0
       dRel = 200
-      if leadOne.status:
-        vLead = leadOne.vLead * CV.MS_TO_KPH
-        aLead = leadOne.aLead
-        dRel = leadOne.dRel
+      if radarstate.leadOne.status:
+        vLead = radarstate.leadOne.vLead * CV.MS_TO_KPH
+        aLead = radarstate.leadOne.aLead
+        dRel = radarstate.leadOne.dRel
 
       self.drivingModeDetector.update_data(v_ego_kph, vLead, carstate.aEgo, aLead, dRel)
 
