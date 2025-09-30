@@ -23,6 +23,7 @@ private:
   QPixmap experimental_img;
   bool experimental_mode;
   bool engageable;
+  float steering_angle = 0.0f;
 };
 
 void drawIcon(QPainter &p, const QPoint &center, const QPixmap &img, const QBrush &bg, float opacity);
