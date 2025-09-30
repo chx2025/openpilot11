@@ -1,7 +1,15 @@
+Carrot2-v9-mo (2025-09-30)
+========================
+* 合并上游更新
+* 修改驾驶模型为 GWM Model
+* 右上角图标根据方向盘旋转
+
+
+Carrot2-v9 (2025-09-xx)
 Carrot2-v9 (2025-09-21)
 ========================
 * GWM Model
-* Lead + 1 detect 
+* Lead + 1 detect
 * Improve radar vision matching
 * Auto safe-mode on stopped vehicle detection
 
