@@ -135,7 +135,7 @@ def match_vision_to_track(v_ego: float, lead: capnp._DynamicStructReader, tracks
   def prob(c):
     prob_d = laplacian_pdf(c.dRel, offset_vision_dist, lead.xStd[0])
     prob_y = laplacian_pdf(c.yRel, -lead.y[0], lead.yStd[0])
-    prob_y2 = laplacian_pdf(c.yRel, -lead.y[0], lead.yStd[0] * 3)  # for cut-in
+    prob_y2 = laplacian_pdf(c.yRel, -lead.y[0], lead.yStd[0] * 2)  # for cut-in
     prob_v = laplacian_pdf(c.vLead, lead.v[0], lead.vStd[0])
 
     #weight_v = np.interp(c.vLead, [0, 10], [0.3, 1])
