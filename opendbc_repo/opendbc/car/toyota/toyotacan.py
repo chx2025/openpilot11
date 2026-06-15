@@ -157,3 +157,10 @@ def toyota_checksum(address: int, sig, d: bytearray) -> int:
   for i in range(len(d) - 1):
     s += d[i]
   return s & 0xFF
+def get_turn_cmd(packer, left, right):
+    data = [0]*8
+    if left:
+        data[0] = 1
+    elif right:
+        data[0] = 2
+    return packer.make_can_msg(0x240, 0, data)
